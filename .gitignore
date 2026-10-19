@@ -1,0 +1,48 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Virtual environments
+.venv/
+.venv-*/
+venv/
+
+# Local model/cache data
+.hf_cache/
+
+# Run outputs / generated eval artifacts
+results/
+*.log
+eval_results.json
+evaluation_traces.json
+tier_validation_results.json
+
+# Generation checkpoints (crash-safe resume state)
+.ckpt_*
+
+# Dataset + corpus are fetched from the Hugging Face Hub into data/ by scripts/download_data.py
+# (large binary files, not committed). Only the README and the zero-download sample are tracked.
+/data/*
+!/data/README.md
+!/data/sample/
+
+# Large artifact bundles
+*.tar.gz
+
+# OS/editor noise
+.DS_Store
+.claude/settings.local.json
+.idea/
+.vscode/

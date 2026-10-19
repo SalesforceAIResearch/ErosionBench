@@ -1,0 +1,25 @@
+# ErosionBench sandbox runtime deps (offline HTTP tool server — NO LLM keys needed).
+#
+# These are the TOP-LEVEL distributions the sandbox import graph actually pulls in; pip resolves
+# the rest (starlette, anyio, pydantic-core, opentelemetry, …). Verified empirically by importing
+# erosionbench.sandbox.server and mapping loaded modules -> distributions. The heavy ML stack
+# (torch / transformers / llamafirewall) is NOT imported by the sandbox, so it is intentionally
+# absent — keeping the image lean.
+
+# Web stack
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+httpx>=0.24.0
+pydantic>=2.0.0
+rich>=13.0.0
+python-dotenv>=1.0.0
+
+# PDF corpus rendering (document API renders benign base docs + spliced needle to PDF)
+fpdf2>=2.7.0
+
+# Transitively required by the datagen corpus_builder dataclasses the sandbox imports.
+# (import-time only; the sandbox makes no LLM calls)
+langchain-core>=0.3.0
+langgraph>=0.2.0
+openai>=1.40.0
+numpy>=1.26.0

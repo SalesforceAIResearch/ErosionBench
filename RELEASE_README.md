@@ -57,9 +57,12 @@ See `DATASET_CARD.md` → *Multimodal (Mode B)* and the paper's Mode B appendix.
 
 ### Option A: Docker (recommended)
 ```bash
+python3 scripts/download_data.py      # fetches data/shared_corpus/, which the image bakes in
 docker build -f Dockerfile.sandbox -t erosionbench-sandbox .
 docker run --rm -p 8199:8199 erosionbench-sandbox
 ```
+No download yet? Build against the bundled 12-doc sample corpus instead:
+`docker build -f Dockerfile.sandbox --build-arg CORPUS_DIR=data/sample/shared_corpus -t erosionbench-sandbox .`
 
 ### Option B: local Python (3.13)
 ```bash

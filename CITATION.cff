@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use ErosionBench, please cite it as below."
+title: "ErosionBench: Measuring Alignment Decay in Multi-Agent LLM Systems"
+abstract: >-
+  A benchmark that measures alignment decay in multi-agent LLM systems: how attack
+  success escalates from a single agent to a cooperating multi-agent mesh, and how
+  much of that decay each defense layer recovers. 1,728 scenarios across 4 enterprise
+  domains and 16 attack classes mapped to the OWASP LLM Top-10 (2025), with
+  family-disjoint calibration/evaluation splits.
+type: dataset
+authors:
+  - family-names: Bharathwaj
+    given-names: Riya
+license: CC-BY-4.0
+year: 2026
+keywords:
+  - ai-safety
+  - alignment
+  - multi-agent
+  - llm-security
+  - red-teaming
+  - agentic-ai
+identifiers:
+  - type: other
+    value: "generator-seed-20260724001"
+    description: Dataset generator seed for the frozen v1.1 pool.
+preferred-citation:
+  type: generic
+  title: "ErosionBench: Measuring Alignment Decay in Multi-Agent LLM Systems"
+  year: 2026
+  notes: >-
+    Generator seed 20260724001; family-disjoint calibration/evaluation splits.
+    Dataset v1.1 (supply_chain_poisoning payload correction).

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<!--
+  Scenario Compare — L2 (No Defense) vs L5 (Meta-Auditor), post-hoc, per scenario.
+
+  Reads three JSON files produced by run_full_eval.py + the dataset:
+    - auditor_reasoning.json   (Stage 5b: per_scenario[] with verdict/metrics/routing)
+    - full_eval_layered.json   (per-layer per_scenario compromised maps: L2, L5)
+    - dataset.json             (join for attack_class + attacker_objective + intent)
+
+  Join key is scenario_id across all three. Works two ways:
+    1. Served from the output dir (fetches the three files by relative path), OR
+    2. Standalone: use the file pickers to load each JSON by hand.
+
+  It is READ-ONLY and self-contained — no build step, no live-run dependency.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ErosionBench — Scenario Compare (L2 vs L5)</title>
+<style>
+  :root {
+    --bg:#0d1117; --panel:#161b22; --border:#30363d; --ink:#c9d1d9; --muted:#8b949e;
+    --good:#2ea043; --bad:#f85149; --warn:#d29922; --accent:#58a6ff;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;
+         background:var(--bg); color:var(--ink); }
+  header { padding:14px 20px; border-bottom:1px solid var(--border); display:flex;
+           align-items:center; gap:16px; flex-wrap:wrap; }
+  h1 { font-size:18px; margin:0; }
+  .muted { color:var(--muted); }
+  select, button, input[type=file] { background:#21262d; color:var(--ink);
+           border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:13px; }
+  .controls { padding:12px 20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+              border-bottom:1px solid var(--border); }
+  .controls label { color:var(--muted); font-size:12px; margin-right:4px; }
+  .loaders { padding:10px 20px; display:flex; gap:18px; flex-wrap:wrap;
+             background:#0b0f14; border-bottom:1px solid var(--border); font-size:12px; }
+  .loaders .file { display:flex; flex-direction:column; gap:3px; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
+  .dot.ok { background:var(--good); } .dot.no { background:var(--bad); }
+  main { padding:20px; }
+  .scenmeta { background:var(--panel); border:1px solid var(--border); border-radius:8px;
+              padding:14px 16px; margin-bottom:16px; }
+  .scenmeta .tag { display:inline-block; background:#21262d; border:1px solid var(--border);
+                   border-radius:999px; padding:2px 10px; margin-right:6px; font-size:12px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .col { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:16px; }
+  .col h2 { margin:0 0 4px; font-size:15px; }
+  .verdict { font-size:22px; font-weight:700; margin:8px 0; }
+  .verdict.compromised { color:var(--bad); }
+  .verdict.mitigated   { color:var(--good); }
+  .verdict.na { color:var(--muted); }
+  table { width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; }
+  td, th { text-align:left; padding:4px 6px; border-bottom:1px solid #21262d; }
+  th { color:var(--muted); font-weight:600; }
+  .metric-fired { color:var(--bad); font-weight:600; }
+  .metric-zero  { color:var(--muted); }
+  .path { font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--accent);
+          word-break:break-word; }
+  .note { color:var(--muted); font-size:12px; margin-top:8px; }
+  .banner { padding:12px 16px; background:#1c2128; border:1px solid var(--border);
+            border-radius:8px; color:var(--muted); }
+  .diff { margin-top:16px; padding:12px 16px; border-radius:8px; border:1px solid var(--border); }
+  .diff.caught { background:rgba(46,160,67,0.1); border-color:var(--good); }
+  .diff.missed { background:rgba(248,81,73,0.1);  border-color:var(--bad); }
+  .diff.same   { background:#161b22; }
+  code { background:#21262d; padding:1px 5px; border-radius:4px; font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ErosionBench — Scenario Compare</h1>
+  <span class="muted">L2 (No Defense) vs L5 (Meta-Auditor), per scenario</span>
+</header>
+
+<div class="loaders" id="loaders">
+  <div class="file">
+    <span><span class="dot no" id="dot-aud"></span>auditor_reasoning.json</span>
+    <input type="file" id="in-aud" accept=".json" />
+  </div>
+  <div class="file">
+    <span><span class="dot no" id="dot-lay"></span>full_eval_layered.json</span>
+    <input type="file" id="in-lay" accept=".json" />
+  </div>
+  <div class="file">
+    <span><span class="dot no" id="dot-ds"></span>dataset.json (for attack_class)</span>
+    <input type="file" id="in-ds" accept=".json" />
+  </div>
+</div>
+
+<div class="controls">
+  <span><label>Domain</label><select id="fDomain"><option value="">all</option></select></span>
+  <span><label>Tier</label><select id="fTier"><option value="">all</option></select></span>
+  <span><label>Attack class</label><select id="fClass"><option value="">all</option></select></span>
+  <span><label>Outcome</label>
+    <select id="fOutcome">
+      <option value="">all</option>
+      <option value="caught">L5 caught what L2 missed</option>
+      <option value="missed">both missed</option>
+      <option value="fp">L5 false positive</option>
+    </select>
+  </span>
+  <span><label>Scenario</label><select id="fScen" style="min-width:240px"></select></span>
+</div>
+
+<main>
+  <div id="banner" class="banner">
+    Load the three JSON files above (or serve this page from the run's output dir so they
+    fetch automatically). Until then, nothing to show.
+  </div>
+  <div id="view" style="display:none">
+    <div class="scenmeta" id="scenmeta"></div>
+    <div class="cols">
+      <div class="col" id="colL2"></div>
+      <div class="col" id="colL5"></div>
+    </div>
+    <div id="diff"></div>
+  </div>
+</main>
+
+<script>
+"use strict";
+const DATA = { aud:null, lay:null, ds:null };   // raw loaded JSON
+let ROWS = [];                                    // joined per-scenario rows
+
+// ---- helpers ---------------------------------------------------------------
+const $ = id => document.getElementById(id);
+const setDot = (id, ok) => $(id).className = "dot " + (ok ? "ok" : "no");
+const esc = s => String(s==null?"":s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+function tierOf(id){ const m=/T([123])/.exec(id||""); return m?("T"+m[1]):"?"; }
+function domainOf(id){
+  const p = (id||"").split("_")[0];
+  return {QF:"quantitative_finance",CS:"cicd_supply_chain",CI:"cicd_supply_chain",
+          DE:"data_engineering",CR:"autonomous_crm"}[p] || "?";
+}
+
+// Pull the per_scenario array out of auditor_reasoning.json (tolerant to shape).
+function auditRows(aud){
+  if(!aud) return [];
+  return aud.per_scenario || aud.analysis?.per_scenario || [];
+}
+// L2/L5 compromised maps from full_eval_layered.json (per-layer per_scenario:{id:bool}).
+function layerMap(lay, label){
+  if(!lay) return null;
+  const L = lay.layers?.[label] || lay[label];
+  return L?.per_scenario || null;
+}
+// dataset.json → {scenario_id: {...}}
+function dsIndex(ds){
+  const idx={};
+  (ds||[]).forEach(s => idx[s.scenario_id]=s);
+  return idx;
+}
+
+// ---- join ------------------------------------------------------------------
+function rebuild(){
+  const aud = auditRows(DATA.aud);
+  const l2  = layerMap(DATA.lay,"L2");
+  const l5  = layerMap(DATA.lay,"L5");
+  const ds  = dsIndex(DATA.ds);
+  ROWS = aud.map(r => {
+    const sid=r.scenario_id, d=ds[sid]||{};
+    return {
+      id:sid,
+      domain:r.domain||domainOf(sid),
+      tier:r.tier||tierOf(sid),
+      is_malicious:r.is_malicious,
+      attack_class:d.attack_class||"?",
+      attacker_objective:d.attacker_objective||"",
+      user_intent:d.user_intent||"",
+      // outcomes
+      l2_comp: l2 ? !!l2[sid] : null,          // No-Defense compromised?
+      l5_comp: r.auditor_compromised!=null ? !!r.auditor_compromised
+               : (l5 ? !!l5[sid] : null),      // Meta-Auditor final verdict
+      solver_comp: r.solver_compromised,        // did the payload actually land?
+      // auditor internals (L5)
+      status:r.status, verdict_source:r.verdict_source, decision_path:r.decision_path,
+      sdi:r.sdi, cii:r.cii, vad:r.vad, vpr:r.vpr,
+      semantic:r.semantic_compromise_prob, calibrated:r.calibrated_confidence,
+      grey:r.grey_zone_triggered,
+      cf_comp:r.cf_compromised, cf_delta:r.cf_max_delta, cf_info:r.cf_ablation_informative,
+    };
+  });
+  populateFilters();
+  applyFilters();
+}
+
+function uniq(vals){ return [...new Set(vals.filter(Boolean))].sort(); }
+function fillSel(sel, vals, keep){
+  const cur = keep ? sel.value : "";
+  sel.innerHTML = '<option value="">all</option>' +
+    vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+  if(keep && vals.includes(cur)) sel.value=cur;
+}
+function populateFilters(){
+  fillSel($("fDomain"), uniq(ROWS.map(r=>r.domain)), true);
+  fillSel($("fTier"),   uniq(ROWS.map(r=>r.tier)), true);
+  fillSel($("fClass"),  uniq(ROWS.map(r=>r.attack_class)), true);
+}
+
+function outcomeOf(r){
+  if(r.is_malicious===false && r.l5_comp===false) return "tn";
+  if(r.is_malicious===false && r.l5_comp===true)  return "fp";
+  if(r.l2_comp && !r.l5_comp) return "caught";      // L5 saved it
+  if(r.l2_comp && r.l5_comp)  return "missed";       // both compromised
+  return "other";
+}
+
+function applyFilters(){
+  const fd=$("fDomain").value, ft=$("fTier").value, fc=$("fClass").value, fo=$("fOutcome").value;
+  let rows = ROWS.filter(r =>
+    (!fd||r.domain===fd) && (!ft||r.tier===ft) && (!fc||r.attack_class===fc) &&
+    (!fo || outcomeOf(r)===fo));
+  const sel=$("fScen");
+  const cur=sel.value;
+  sel.innerHTML = rows.map(r=>{
+    const oc=outcomeOf(r);
+    const mark = oc==="caught"?"✔ caught":oc==="missed"?"✗ missed":oc==="fp"?"⚠ FP":"";
+    return `<option value="${esc(r.id)}">${esc(r.id)} — ${esc(r.attack_class)} ${mark}</option>`;
+  }).join("");
+  if(rows.some(r=>r.id===cur)) sel.value=cur;
+  render(sel.value);
+}
+
+// ---- render ----------------------------------------------------------------
+function verdictBlock(title, compromised, sub){
+  let cls="na", txt="n/a";
+  if(compromised===true){ cls="compromised"; txt="COMPROMISED"; }
+  else if(compromised===false){ cls="mitigated"; txt="MITIGATED"; }
+  return `<h2>${esc(title)}</h2><div class="verdict ${cls}">${txt}</div>
+          <div class="note">${sub||""}</div>`;
+}
+function mrow(name, v, fires){
+  const cls = fires ? "metric-fired" : "metric-zero";
+  return `<tr><td>${name}</td><td class="${cls}">${v==null?"—":(+v).toFixed(3)}${fires?"  ▲ fired":""}</td></tr>`;
+}
+function render(id){
+  const r = ROWS.find(x=>x.id===id);
+  if(!r){ $("view").style.display="none"; return; }
+  $("banner").style.display="none"; $("view").style.display="block";
+
+  $("scenmeta").innerHTML =
+    `<div><b>${esc(r.id)}</b>
+       <span class="tag">${esc(r.domain)}</span>
+       <span class="tag">${esc(r.tier)}</span>
+       <span class="tag">${esc(r.attack_class)}</span>
+       <span class="tag">${r.is_malicious? "malicious":"benign"}</span></div>
+     ${r.attacker_objective?`<div class="note"><b>Objective:</b> ${esc(r.attacker_objective).slice(0,400)}</div>`:""}
+     ${r.user_intent?`<div class="note"><b>User intent:</b> ${esc(r.user_intent).slice(0,300)}</div>`:""}`;
+
+  // L2 — No Defense
+  $("colL2").innerHTML = verdictBlock("L2 · No Defense", r.l2_comp,
+      r.l2_comp===null ? "L2 not present in loaded full_eval_layered.json"
+                       : "Multi-agent mesh, no auditor/firewall.") +
+    `<div class="note">Payload actually landed (solver): <b>${r.solver_comp==null?"—":(r.solver_comp?"yes":"no")}</b></div>`;
+
+  // L5 — Meta-Auditor (with reasoning)
+  const fired = m => m!=null && m>0;
+  const semFire = r.semantic!=null && r.semantic>0.95; // raw-scale primary tau
+  $("colL5").innerHTML = verdictBlock("L5 · Meta-Auditor", r.l5_comp,
+      `Auditor status: <b>${esc(r.status||"—")}</b>`) +
+    `<table>
+       <tr><th>signal</th><th>value</th></tr>
+       ${mrow("SDI (state divergence)", r.sdi, fired(r.sdi))}
+       ${mrow("CII (taint propagation)", r.cii, fired(r.cii))}
+       ${mrow("VAD (policy)", r.vad, fired(r.vad))}
+       ${mrow("VPR (descriptive)", r.vpr, false)}
+       ${mrow("semantic score (raw)", r.semantic, semFire)}
+       ${mrow("calibrated conf", r.calibrated, false)}
+     </table>
+     <div class="note">grey-zone triggered: <b>${r.grey==null?"—":(r.grey?"yes":"no")}</b>
+        · counterfactual: comp=<b>${r.cf_comp==null?"—":r.cf_comp}</b>,
+        Δ=<b>${r.cf_delta==null?"—":(+r.cf_delta).toFixed(3)}</b>,
+        informative=<b>${r.cf_info==null?"—":r.cf_info}</b></div>
+     <div class="note">verdict source: <span class="path">${esc(r.verdict_source||"—")}</span></div>
+     <div class="note">decision path: <span class="path">${esc(r.decision_path||"—")}</span></div>`;
+
+  // Contrast banner
+  const oc=outcomeOf(r);
+  let dcls="same", dmsg="Same outcome under both layers.";
+  if(oc==="caught"){ dcls="caught";
+    dmsg="✔ <b>Meta-Auditor caught it.</b> No-Defense was compromised; L5 flagged/blocked the same attack."; }
+  else if(oc==="missed"){ dcls="missed";
+    dmsg="✗ <b>Both compromised.</b> The attack landed even with the auditor — a residual miss."; }
+  else if(oc==="fp"){ dcls="missed";
+    dmsg="⚠ <b>False positive.</b> Benign scenario, but the Meta-Auditor flagged it compromised."; }
+  else if(oc==="tn"){ dcls="caught"; dmsg="✔ Benign, correctly cleared by the auditor."; }
+  $("diff").className="diff "+dcls;
+  $("diff").innerHTML = dmsg;
+}
+
+// ---- wiring ----------------------------------------------------------------
+function loadFile(input, key, dot){
+  input.addEventListener("change", e => {
+    const f=e.target.files[0]; if(!f) return;
+    const rd=new FileReader();
+    rd.onload = () => { try{ DATA[key]=JSON.parse(rd.result); setDot(dot,true); rebuild(); }
+                        catch(err){ alert("Bad JSON: "+err); } };
+    rd.readAsText(f);
+  });
+}
+loadFile($("in-aud"),"aud","dot-aud");
+loadFile($("in-lay"),"lay","dot-lay");
+loadFile($("in-ds"), "ds", "dot-ds");
+
+["fDomain","fTier","fClass","fOutcome"].forEach(id=>$(id).addEventListener("change",applyFilters));
+$("fScen").addEventListener("change",e=>render(e.target.value));
+
+// Auto-fetch when served from the output dir (harmless 404s otherwise).
+async function tryFetch(path,key,dot){
+  try{ const r=await fetch(path); if(r.ok){ DATA[key]=await r.json(); setDot(dot,true); rebuild(); } }
+  catch(_){}
+}
+tryFetch("auditor_reasoning.json","aud","dot-aud");
+tryFetch("full_eval_layered.json","lay","dot-lay");
+tryFetch("dataset.json","ds","dot-ds");
+</script>
+</body>
+</html>

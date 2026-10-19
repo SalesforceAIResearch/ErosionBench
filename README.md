@@ -151,8 +151,8 @@ a **T2** escalation and two a full **T1→T2→T3** triplet so the escalation ax
 - **Fewer scenarios:** add `--limit N` to the Quickstart command (a smoke cap, not a valid metric).
 - **No API keys at all:** `python3 scripts/run_eval.py --mock` runs the whole generation → mesh →
   auditor → scoring loop offline with scripted agents (no keys, no sandbox).
-- **A different auditor on the sample:** the directory also ships frozen `artifact*.json` files for
-  five auditors, so the *calibrated* path runs on the sample too — see *Run a different auditor* below.
+- **A different auditor on the sample:** [`artifacts/`](artifacts/) ships frozen calibration artifacts
+  for five auditors, so the *calibrated* path runs on the sample too — see *Run a different auditor* below.
 
 ---
 
@@ -175,8 +175,8 @@ below for the calibrated headline.
 
 ## Reproduce the headline number
 
-> ⚠ **Requires the fetched dataset.** This path reads `data/eval.json`, `data/artifact.json`, and
-> `data/shared_corpus/` — obtained via `download_data.py` (see *Install*). No download yet? Use the
+> ⚠ **Requires the fetched dataset.** This path reads `data/eval.json`, `data/shared_corpus/`, and the
+> frozen `artifacts/artifact.json` — the data is obtained via `download_data.py` (see *Install*). No download yet? Use the
 > bundled `data/sample/` (see *Run a different auditor → Option 1*) instead — the calibrated code path
 > there is identical, only the split size (and therefore the reported numbers) differs.
 
@@ -191,7 +191,7 @@ python3 -m erosionbench.sandbox.server --port 8223 --corpus-dir data/shared_corp
 # 2. Score the held-out split with the frozen artifact (mesh=gpt-5.5, auditor=claude-opus-4-8)
 export EROSIONBENCH_SANDBOX_URL=http://127.0.0.1:8223
 export EVAL_DATASET=data/eval.json          # held-out split
-export EVAL_ARTIFACT=data/artifact.json     # frozen Platt + conformal τ (auditor-specific)
+export EVAL_ARTIFACT=artifacts/artifact.json  # frozen Platt + conformal τ (auditor-specific)
 export EVAL_MESH_MODEL=gpt-5.5
 export EVAL_AUDITOR_MODEL=claude-opus-4-8    # MUST match the auditor the artifact was fit on
 export EVAL_OUT_DIR=results/repro
@@ -216,18 +216,19 @@ the bundled sample with no data download**, so you can try a different auditor r
 
 ### Option 1 — reuse a pre-fit artifact (five auditors ship ready) — *runs on the sample*
 
-The bundled [`data/sample/`](data/sample/) directory ships frozen artifacts for **five** auditors, so
-this is the **same calibrated code path as the headline, just on the 32-scenario sample**. Point
+The [`artifacts/`](artifacts/) directory ships frozen calibration artifacts for **five** auditors, so
+with the bundled [`data/sample/`](data/sample/) this is the **same calibrated code path as the headline,
+just on the 32-scenario sample**. Point
 `EVAL_ARTIFACT` and `EVAL_AUDITOR_MODEL` at a **matching** pair (`run_final_eval` fails loud on a
 mismatch):
 
 | auditor model | `EVAL_ARTIFACT` |
 |---|---|
-| `claude-opus-4-8` (anchor / paper headline) | `data/sample/artifact.json` |
-| `claude-sonnet-4-6` | `data/sample/artifact_sonnet46.json` |
-| `gpt-5.1` | `data/sample/artifact_gpt51.json` |
-| `gpt-5.5` | `data/sample/artifact_gpt55.json` |
-| `gemini-3.5-flash` | `data/sample/artifact_gemini35flash.json` |
+| `claude-opus-4-8` (anchor / paper headline) | `artifacts/artifact.json` |
+| `claude-sonnet-4-6` | `artifacts/artifact_sonnet46.json` |
+| `gpt-5.1` | `artifacts/artifact_gpt51.json` |
+| `gpt-5.5` | `artifacts/artifact_gpt55.json` |
+| `gemini-3.5-flash` | `artifacts/artifact_gemini35flash.json` |
 
 ```bash
 # Start the sandbox first (needs no keys). --corpus-dir serves the bundled corpus slice so the
@@ -236,7 +237,7 @@ python3 -m erosionbench.sandbox.server --port 8223 --corpus-dir data/sample/shar
 export EROSIONBENCH_SANDBOX_URL=http://127.0.0.1:8223
 
 export EVAL_DATASET=data/sample/sample_dataset.json      # bundled sample — no download needed
-export EVAL_ARTIFACT=data/sample/artifact_sonnet46.json  # matching artifact for the auditor below
+export EVAL_ARTIFACT=artifacts/artifact_sonnet46.json    # matching artifact for the auditor below
 export EVAL_MESH_MODEL=gpt-5.5                            # keep gpt-5.5: the artifacts were calibrated against it
 export EVAL_AUDITOR_MODEL=claude-sonnet-4-6              # MUST match the artifact
 export EVAL_OUT_DIR=results/sample_sonnet46
@@ -246,7 +247,7 @@ python3 scripts/run_final_eval.py                        # needs API keys for th
 Keep `EVAL_MESH_MODEL=gpt-5.5` — the calibration (and hence the operating point) is joint over the
 auditor **and** the mesh, so swapping the mesh invalidates the frozen threshold. Each artifact was fit
 on the full held-out calibration split, so the **same command reproduces that auditor's headline** once
-you point `EVAL_DATASET` at the full `data/eval.json` (fetched data — see the ⚠ note below); on the
+you point `EVAL_DATASET` at the full `data/eval.json` (fetched data — see *Install*); on the
 32-scenario sample it is a functional check that the calibrated path runs and the leak guard passes,
 not a metric (n is far too small to estimate the operating point).
 
@@ -313,11 +314,13 @@ ErosionBench/
 │   ├── run_full_eval.py    # full L1–L5 ladder over a dataset (live auditor pass)
 │   ├── generate_dataset.py # regenerate the scenario pool
 │   ├── collect_calibration.py # fit the split-conformal detector per auditor
-│   ├── download_data.py    # fetch dataset + corpus from the public data release
-│   ├── research/           # paper figures / analysis (not part of the eval surface)
-│   └── diagnostics/        # one-off probes used during development
+│   ├── download_data.py    # fetch dataset + corpus from the Hugging Face release
+│   └── …                   # dataset build, Mode B (image) scoring, integrity tools
 │
-├── data/                   # (git-ignored) dataset JSONs + shared_corpus/ from the data release
+├── artifacts/              # frozen calibration artifacts (Platt + conformal τ), one per auditor
+├── data/                   # dataset JSONs + shared_corpus/ fetched from the Hub (git-ignored);
+│   └── sample/             #   bundled 32-scenario slice + 12-doc corpus (tracked, no download)
+├── docs/                   # architecture + dataset-pipeline design notes
 └── tests/                  # unit + integration tests (pytest)
 ```
 
