@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Regression tests: corpus source wiring (Step 1 of the mesh/sandbox document wiring).
 
 Proves, without a live LLM (mock/template corpus) and without network:

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Deterministic invariants for the CRM/DE direct-injection session builder.
 
 These assert the *fragmentation mechanism* is well formed WITHOUT running the mesh

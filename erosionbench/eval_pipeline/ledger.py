@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Append-only, cryptographically traceable shared state ledger.
 
 The mesh's "memory" is a persistent key/value store that survives across sessions.

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Perimeter firewalls -- the *defense* layer.
 
 All firewalls implement the same :class:`Firewall` protocol (``inspect`` + ``decisions``)

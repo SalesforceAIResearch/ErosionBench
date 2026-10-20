@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Adaptive Attack Engine — runtime LLM-driven prompt injection.
 
 This is Phase 1 of the EXECUTION pipeline (not dataset generation).

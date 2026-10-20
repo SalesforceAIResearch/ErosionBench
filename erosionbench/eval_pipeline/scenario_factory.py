@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Parametric scenario factory -- generate scenario *families* from a few axes.
 
 The hand-authored Profiles A/B/C in :mod:`scenario_pool` are reference cases. This module

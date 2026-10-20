@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Domain Spec Registry — structural declarations for each enterprise domain.
 
 Each domain declares its own agent topology, tool catalog, debate parameters,

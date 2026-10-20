@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Healthcare Clinical Operations domain endpoints (CPOE, PHI release, formulary override)."""
 
 from __future__ import annotations

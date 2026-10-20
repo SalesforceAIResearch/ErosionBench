@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Offline wiring tests for shared-corpus datagen mode (corpus_needle_docs + generator + adapter).
 
 Uses a deterministic FAKE LLM (no network) that echoes a compliant enterprise passage with the

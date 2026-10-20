@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Robust extraction of the resolved config value from a (possibly-prose) LLM reply.
 
 Regression: the Profile-C schema resolver and the deployment weights resolver used

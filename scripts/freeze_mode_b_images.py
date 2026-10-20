@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Freeze the Mode-B image-corroboration arm for reproducibility (Direction-1 multimodal).
 
 Mode B is the scored research arm: the forged value is already in the ledger (normal attack

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stage B (Mode A): inline image-needle vision read-path.
 
 For inline attack classes whose forged value rides a ``long_context_documents`` entry

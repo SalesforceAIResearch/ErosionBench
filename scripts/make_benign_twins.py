@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Build BENIGN corroboration twins for the 66 frozen Mode-B malicious scenarios.
 
 The Mode-B detection differential needs a negative class: a scenario that carries a corroboration

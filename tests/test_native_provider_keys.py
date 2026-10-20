@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Routing tests for native per-provider keys (no-gateway path).
 
 An outside user should be able to drop in their own OpenAI / Anthropic / Google keys and run

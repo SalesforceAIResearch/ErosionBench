@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """End-to-end invariants for the image-modality pipeline seams (Slices 3+4).
 
 Covers, with NO LLM and NO OCR required (a fake reader stands in where a render is needed):

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """OWASP ASI + MAStrike framework enums and cross-reference tables."""
 
 from __future__ import annotations

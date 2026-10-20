@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Rich terminal dashboard for the sandbox server."""
 
 from __future__ import annotations

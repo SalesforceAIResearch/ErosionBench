@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stage 3: Validation Gate — verifies ground truth labels before tier scaling.
 
 Answers ONE question: "Is this test case VALID?"

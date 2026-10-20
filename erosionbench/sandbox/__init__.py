@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """ErosionBench Sandbox — lightweight local execution environment for benchmark demos.
 
 Start the server with:

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """In-memory state store tracking all domain mutations and blast radius."""
 
 from __future__ import annotations

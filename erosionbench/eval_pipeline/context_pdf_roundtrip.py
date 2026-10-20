@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Apply the real PDF parsing-friction to long-context documents (true-sim reads for ALL attacks).
 
 Document-grounded scenarios (those with a ``document_manifest``) already serve their needle-bearing

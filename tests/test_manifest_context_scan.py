@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Document-grounded CONTEXT firewall scan + normalize-then-audit (OCR-then-firewall) baseline.
 
 The doc-grounded needle lives in a doc served lazily by the DocumentServer, which the pre-graph

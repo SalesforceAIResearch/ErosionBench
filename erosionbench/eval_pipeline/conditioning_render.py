@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Single source of truth for the per-tier visible-slice conditioning clause.
 
 This is the laundered governance context handed to the deciding (Policy) agent at T2/T3. It is

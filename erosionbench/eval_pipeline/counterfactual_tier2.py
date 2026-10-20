@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Counterfactual Session-Ablation Tier 2: reasoning-influence detection.
 
 Formal metrics (VPR, SDI, CII, VAD) are provably blind to attacks where:

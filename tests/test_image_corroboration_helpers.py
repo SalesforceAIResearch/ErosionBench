@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Deterministic invariants for the Mode-B image-corroboration render/capturability helpers.
 
 These pin the two fixes that took the image arm from clipping/misreading to 11/11 clean ledger

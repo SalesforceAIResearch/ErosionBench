@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Build the shared benign document corpus to disk (PDFs + corpus_manifest.json).
 
 This is called ONCE per corpus, not per scenario. It writes, for each domain:

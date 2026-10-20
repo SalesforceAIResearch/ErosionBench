@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Comprehensive ErosionBench evaluation across all domains.
 
 Generates 1 scenario per tier (T1, T2, T3) + ground truth per domain using GPT 4.1

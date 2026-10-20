@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Carve ONE generated pool into two FAMILY-DISJOINT dataset files.
 
 The calibration artifact FITS on the calibration side, so its families can never be

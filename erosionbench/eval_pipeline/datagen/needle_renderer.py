@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Canonical deterministic needle renderer (the payload ``I`` in PoisonedRAG ``P = S ⊕ I``).
 
 ONE source of truth for the mesh-visible poisoned section. Previously three renderers

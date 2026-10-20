@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Adapter: RenderedScenario (datagen pipeline) → EnterpriseScenario (execution pipeline).
 
 The datagen pipeline produces RenderedScenario objects with structural contracts,

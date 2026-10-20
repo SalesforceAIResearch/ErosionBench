@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Metrics API — reads eval-pipeline result files and normalizes them into a stable JSON shape.
 
 This is the durable contract the dashboard (and any future React frontend) consumes. It does NOT

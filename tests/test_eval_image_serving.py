@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Eval-time image serving: the read-path that hands an image-modality needle to a vision agent.
 
 Datagen delivers the forged value ONLY in pixels (page text carries a value-free citation). These

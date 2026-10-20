@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 2 regression tests: canonical needle renderer.
 
 Proves the plan's Phase-2 gate WITHOUT a live LLM:

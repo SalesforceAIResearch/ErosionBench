@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Reproducible re-score of Mode-B §B2 (recall) and §B4 (FPR) from the raw journal.
 
 Reads the scored journal (``scripts/mode_b_scored.py --out-dir results/mode_b_scored_calibrated``)

@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """LLM-judge baseline — the SAME-SURFACE comparison point for the Meta-Auditor.
 
 WHY this exists (read before changing):

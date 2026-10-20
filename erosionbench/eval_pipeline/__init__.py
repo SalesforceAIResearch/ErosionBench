@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Financial-ML multi-agent security evaluation pipeline (LangGraph + LlamaFirewall).
 
 A modular, threat-agnostic data pipeline (AgentDojo-inspired goal verification) for evaluating

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """End-to-end smoke test: in-process vs live (HTTP) document read path.
 
 Runs a few DOCUMENT-GROUNDED scenarios through the mesh in scripted mode (no API keys) twice:

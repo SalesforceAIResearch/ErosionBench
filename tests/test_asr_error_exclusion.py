@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Regression: infrastructure-errored scenarios must be EXCLUDED from ASR, not scored compromised.
 
 The old fail-closed behavior scored any scenario that raised during evaluation as

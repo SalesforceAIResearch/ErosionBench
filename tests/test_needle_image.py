@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Deterministic invariants for the image-modality needle path (datagen-side, Slice 1).
 
 These assert the M1 typographic render + the fail-loud capturability gate WITHOUT running the

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Fetch the ErosionBench dataset + companion corpus from Hugging Face into ``data/``.
 
 The dataset JSONs and the PDF corpus are NOT committed to git (they are large, frozen

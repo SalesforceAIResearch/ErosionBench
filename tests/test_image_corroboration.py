@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Mode B — image corroboration datagen (channel split on the corroborating source).
 
 For ledger/debate/collusion classes the forged value already lives in the ledger; Mode B *echoes*

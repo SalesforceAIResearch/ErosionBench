@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Tests for the doc-type-aware corpus content engine + fail-loud generation paths."""
 
 import random

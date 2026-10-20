@@ -1,3 +1,5 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 # ErosionBench sandbox — the self-contained execution environment agents call as HTTP tools.
 # This image serves ONLY the sandbox (enterprise action endpoints + the document/corpus API +
 # admin telemetry). It runs offline: no LLM keys, no external services, deterministic.

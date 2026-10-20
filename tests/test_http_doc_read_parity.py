@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Parity tests: in-process vs live (HTTP) document reads (Step 3 of the mesh/sandbox wiring).
 
 Proves the transport toggle changes *how* pages are served, never *what* is served:

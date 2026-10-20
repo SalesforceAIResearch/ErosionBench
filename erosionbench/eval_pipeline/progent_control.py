@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Side utility: run the **Progent** privilege-control baseline (control / future scope).
 
 Progent is intentionally NOT one of the two primary perimeter baselines (those are LlamaFirewall

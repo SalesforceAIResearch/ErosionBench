@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Mode B corroboration CONTEXT firewall scan (the served corroboration-page differential).
 
 `_inspect_corroboration_context` is the ledger-corroboration analog of `_inspect_manifest_context`:

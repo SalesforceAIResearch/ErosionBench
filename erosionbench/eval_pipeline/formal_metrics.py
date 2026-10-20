@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Formal Causal Verification Metrics for Alignment Decay Detection.
 
 Four deterministic, model-independent metrics that provide mathematically

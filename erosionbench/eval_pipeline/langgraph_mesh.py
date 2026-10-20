@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stateful LangGraph mesh + execution loops (the runtime).
 
 This module replaces the hand-rolled simulator with a real :mod:`langgraph` ``StateGraph``.

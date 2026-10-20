@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Held-out validation of a frozen calibration artifact (Phase-5 gate).
 
 Loads a FrozenCalibrationArtifact, builds a meta-auditor via ``from_artifact`` (which

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Benchmark metrics: per-attack-class breakdown, alignment-decay profile, peer-trust delta.
 
 This layer sits on top of the per-scenario :class:`~solver.ScenarioResult` list and produces the

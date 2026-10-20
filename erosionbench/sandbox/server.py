@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """FastAPI server — assembles domain routers, document API, and admin endpoints."""
 
 from __future__ import annotations

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 1 gate verification: run over a generated dataset and assert the plan's gate criteria.
 
   1. Non-refusal text in every visible page + session narrative.

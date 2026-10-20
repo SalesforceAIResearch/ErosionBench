@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Step 1: Generate scenarios and save to disk as JSON.
 
 Stores both the executable scenario format AND the assertion contracts

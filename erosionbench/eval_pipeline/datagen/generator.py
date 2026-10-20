@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stage 2: Narrative Coherence Engine — LLM-powered scenario generation.
 
 Given an EnterpriseStateGraph, uses Claude Sonnet to generate a complete,

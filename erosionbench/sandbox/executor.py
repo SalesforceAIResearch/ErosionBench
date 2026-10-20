@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """LiveHttpToolExecutor — concrete implementation of the HttpToolExecutor seam."""
 
 from __future__ import annotations

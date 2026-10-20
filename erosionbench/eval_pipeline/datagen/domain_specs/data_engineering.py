@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Domain spec: Data Engineering — intermediate-step leakage, shared memory pollution."""
 
 from __future__ import annotations
