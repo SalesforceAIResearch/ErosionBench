@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 # Launch the ErosionBench Sandbox execution environment.
 # Usage: bash erosionbench/sandbox/launcher.sh [--port 8199]
 set -euo pipefail

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Session isolation for the sandbox document store (fix for the intermittent PDF 404 race).
 
 Concurrent scenario workers share one sandbox process. Before isolation they also shared ONE

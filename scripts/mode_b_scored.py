@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Mode-B Phase 2 — SCORED detection pass over the full frozen set (both classes, both arms).
 
 The scored research run behind the paper's Mode-B detection differential. Runs the WHOLE frozen

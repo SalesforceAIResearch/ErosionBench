@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Build the shared base-document corpus (32 docs = 8 doc_types x 4 domains), ONCE.
 
 Every doc is LLM-written (gpt-5) for a uniformly rich substrate the needle can blend into

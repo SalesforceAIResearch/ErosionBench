@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Regenerate the FULL 4-domain verification_manifest.json — OFFLINE, no gateway.
 
 The manifest shipped with the frozen pool covered only `autonomous_crm` (domains:

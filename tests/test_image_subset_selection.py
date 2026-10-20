@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Invariants for image-modality subset selection (build_dataset._select_image_instances).
 
 Modality is a technique orthogonal to the tier axis and applied to a SUBSET of instances, capped

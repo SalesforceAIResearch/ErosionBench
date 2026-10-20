@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 4 regression tests: Meta-Auditor correctness (deterministic, no live LLM).
 
 Covers the plan's Phase-4 required checks that do NOT need a model:

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Agentic Meta-Auditor: tool-using agent architecture for compromise detection.
 
 The Meta-Auditor is now an **Agent** with two primary tools:

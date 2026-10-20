@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Domain spec: Healthcare Clinical Operations — PHI disclosure, order tampering, consent forgery.
 
 5th OOD domain for the zero-shot auditor generalization test (reviewer R4). Structurally distinct

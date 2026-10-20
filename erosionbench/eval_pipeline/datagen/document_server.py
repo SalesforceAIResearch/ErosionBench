@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Runtime document server — injects per-scenario needles into shared corpus at execution time.
 
 At scenario execution time, when an agent calls `fetch_document(doc_id, page_range)`:

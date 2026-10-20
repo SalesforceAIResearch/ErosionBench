@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Tool-execution layer for the LangGraph mesh (defined tools + simulated API calls).
 
 Each agent is granted exactly one tool (a least-privilege manifest, :data:`AGENT_TOOL_PERMISSIONS`).

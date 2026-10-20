@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """download_data.verify must check the PROVENANCE manifests where snapshot_download puts them.
 
 Manifest paths are relative to the Hub repo root, which is mirrored into ``--dest`` (``data/``),

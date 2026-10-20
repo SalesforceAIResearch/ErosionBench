@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Scenario factory / dataset manager (Financial-ML & algorithmic tool-calling).
 
 This module is the *dataset-as-code* layer. It builds fully specified

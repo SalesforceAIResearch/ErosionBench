@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Synchronous Edge Guard: causal verification at each agent boundary.
 
 Sits between EVERY agent transition in the multi-agent mesh and computes

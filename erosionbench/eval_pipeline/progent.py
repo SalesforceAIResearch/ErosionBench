@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Progent (control / future-scope baseline) -- LLM-generated, deterministically-enforced privilege control.
 
 Where :mod:`firewalls` mounts a *perimeter* text classifier (LlamaFirewall: PromptGuard on

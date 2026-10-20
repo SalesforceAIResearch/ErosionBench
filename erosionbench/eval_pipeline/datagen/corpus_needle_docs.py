@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Shared-corpus document composition for the SHARED-CORPUS datagen path.
 
 This is the wiring that replaces per-scenario LLM document authoring with a fixed base-doc

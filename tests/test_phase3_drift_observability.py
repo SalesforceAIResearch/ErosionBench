@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 3 regression tests: drift observability + document counterfactual causality.
 
 All tests run the mesh in SCRIPTED mode (no live model), so behaviour is deterministic and the

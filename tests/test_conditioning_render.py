@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Tests for the single-source conditioning clause renderer.
 
 Locks the two behaviors that keep coordinated corroboration safe to ship:

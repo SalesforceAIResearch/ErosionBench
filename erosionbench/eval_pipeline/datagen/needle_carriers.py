@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """The M2 carrier-template pool: realistic enterprise screenshots the payload is composited into.
 
 M2 ("camouflage") delivers the forged ``key = value`` inside a realistic-looking UI capture — a

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Mode B — the eval LOAD seam (`MeshConfig.frozen_corroboration_path`).
 
 Freezing renders the corroboration ONCE (deterministic composer) so eval reproduces exact bytes

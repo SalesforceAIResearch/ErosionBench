@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Replay API — paced playback of a captured audit-log for the demo's live-attack theater.
 
 The live audit-log is in-memory and resets per eval run, so it's empty between runs. This module

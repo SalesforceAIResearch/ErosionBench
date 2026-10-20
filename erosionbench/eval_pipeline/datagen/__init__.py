@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Procedural dataset generation pipeline for the ErosionBench blue team benchmark.
 
 This package implements a 4-stage pipeline that generates adversarial scenarios

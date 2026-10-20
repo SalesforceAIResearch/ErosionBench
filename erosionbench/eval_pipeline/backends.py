@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Agent decision backends -- the *system under test* layer.
 
 The mesh (:mod:`environment`) is a deterministic state machine, but the *decisions* it

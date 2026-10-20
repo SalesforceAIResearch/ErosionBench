@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Regression tests for two sandbox deployment-path fixes.
 
 1. LiveHttpToolExecutor path interpolation: an empty/missing path param must NOT collapse the URL

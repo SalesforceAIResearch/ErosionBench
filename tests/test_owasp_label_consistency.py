@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Consistency guards for the OWASP Top-10-for-LLM category labels.
 
 Two independent code paths attach an OWASP LLM category to each attack class:

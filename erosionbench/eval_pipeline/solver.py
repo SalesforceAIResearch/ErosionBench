@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Deterministic ground-truth solver + aggregate security metrics.
 
 The solver is the *sole authority* on whether a scenario was compromised. It contains no

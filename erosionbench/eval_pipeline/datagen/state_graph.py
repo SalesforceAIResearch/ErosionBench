@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stage 1: Enterprise State Graph — structural contracts for scenario generation.
 
 This module defines WHAT happens in a scenario (structurally) without specifying

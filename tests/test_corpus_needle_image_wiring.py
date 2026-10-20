@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Wiring invariants for the image-modality branch in compose_needle_document (Slice 2).
 
 Exercises the datagen compose seam end-to-end WITHOUT an LLM and WITHOUT OCR installed: the image

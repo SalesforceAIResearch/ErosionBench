@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Regression tests: needle-splice parity (Step 2 of the mesh/sandbox document wiring).
 
 Proves the correctness lynchpin of the wiring: a given (page, needle) produces BYTE-IDENTICAL

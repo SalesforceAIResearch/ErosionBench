@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Domain-specific ToolBoundary factory.
 
 Extends the base ToolBoundary with domain-specific consequential tools

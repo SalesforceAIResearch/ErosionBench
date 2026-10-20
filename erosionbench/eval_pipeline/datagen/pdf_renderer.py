@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stage 2b: PDF Renderer — converts generated markdown documents to enterprise PDFs.
 
 At execution time, agents interact with these documents through a simulated

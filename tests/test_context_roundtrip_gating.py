@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Gating for the long-context PDF round-trip inside the mesh (_normalize_long_context_docs).
 
 Proves the normalization is applied where it should be and NOT where it shouldn't:

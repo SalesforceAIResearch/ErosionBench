@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 1 regression tests: natural document generation + validation-gate hygiene.
 
 Covers the plan's required Phase-1 checks that do NOT need a live LLM:

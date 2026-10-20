@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Stage 4: Live Execution + 6-Baseline Validation + HuggingFace Export.
 
 Compiles RenderedScenario into EnterpriseScenario, executes with live adaptive

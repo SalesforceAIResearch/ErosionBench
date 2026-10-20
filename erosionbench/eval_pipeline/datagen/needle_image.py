@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Image-modality needle rendering + capturability gate for the SHARED-CORPUS path.
 
 This is the image sibling of :mod:`needle_blender` + the ``_assert_roundtrip`` guard in

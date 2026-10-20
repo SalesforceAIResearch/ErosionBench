@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Frozen calibration workflow (Phase 5).
 
 Turns raw auditor scores into a *versioned, frozen* calibration artifact that

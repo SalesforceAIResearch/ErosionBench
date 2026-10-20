@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Assertion Registry — compiles GroundTruthContract specs into executable predicates.
 
 Each assertion type is a factory function that takes structured parameters and

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Consolidated multi-domain, multi-layer ErosionBench evaluation.
 
 Loads a saved dataset.json (all 4 domains) and runs the configured defense

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Data-driven agent persona catalog for the LangGraph mesh.
 
 No system prompt is hardcoded in the mesh logic. Personas (system prompts, reasoning prompts,

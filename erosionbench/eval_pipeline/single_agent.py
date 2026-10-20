@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Single-agent LlamaFirewall baseline -- a faithful port of ``unit_baseline.py``.
 
 This isolates ONE component of the broader benchmark: a single ``OrchestratorAgent`` that

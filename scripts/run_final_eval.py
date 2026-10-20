@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """ONE-SHOT held-out evaluation of the FINAL pool — the paper number.
 
 Scores data/eval.json EXACTLY ONCE with the FROZEN calibration artifact

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Tests for the long-context PDF round-trip (true-sim reads for inline-delivered attacks)."""
 
 import pytest

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """HttpDocumentServer — the live (over-HTTP) counterpart of the mesh's in-process DocumentServer.
 
 Selected by the mesh when ``EROSIONBENCH_SANDBOX_URL`` is set (Step 3 of the document wiring). It is a

@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """The sandbox CORS policy admits only local origins (no wildcard, no credentials)."""
 from fastapi.testclient import TestClient
 

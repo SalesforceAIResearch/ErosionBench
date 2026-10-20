@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Dashboard route — serves a single self-contained HTML page for the live demo.
 
 Vanilla JS + Chart.js (CDN), no build step. This page is the *disposable demo skin*: it consumes the

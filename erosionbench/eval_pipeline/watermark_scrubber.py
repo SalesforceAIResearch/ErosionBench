@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Watermark Scrubber — strips benchmark tells from scenario objects before mesh execution.
 
 Removes phrases like "Forged SEMANTIC_STATE_POISONING evidence" or other benchmark

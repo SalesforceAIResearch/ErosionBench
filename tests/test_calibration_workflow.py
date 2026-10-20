@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Phase 5 regression tests: frozen calibration workflow (deterministic, offline).
 
 Covers the plan's Phase-5 required checks, none of which need a live model:

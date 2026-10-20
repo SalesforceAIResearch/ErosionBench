@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
 """Calibration collection harness — Phase-5 semantic + formal fit (LLM-bound).
 
 Runs a CALIBRATION dataset through the real mesh + meta-auditor and collects the two

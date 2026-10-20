@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Scenario-compare API — serves per-scenario L2-vs-L5 records for the dashboard panel.
 
 Read-only. Reshapes the per-scenario rows written by ``run_final_eval.py`` into the stable JSON

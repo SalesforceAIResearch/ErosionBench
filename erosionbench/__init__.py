@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """ErosionBench: a multi-agent alignment-decay benchmark.
 
 This package implements the "Cross-State Memory Poisoning" threat scenario as a

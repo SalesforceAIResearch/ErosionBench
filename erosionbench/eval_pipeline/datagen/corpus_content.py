@@ -1,3 +1,6 @@
+# Copyright (c) 2026, Salesforce, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """Doc-type-aware corpus content engine.
 
 The corpus builder used to stamp the SAME generic finance table onto every page of every document
