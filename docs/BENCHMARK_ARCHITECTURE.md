@@ -167,7 +167,7 @@ and auth header differ; an optional secondary Bearer-auth gateway, `LLM_GATEWAY_
 handles Anthropic/Google when configured). Per-model quirks (temperature clamp, `developer`
 system role, reasoning-token headroom for gpt-5.x/o-series) are handled centrally.
 
-**Open models** (Llama, Qwen, Mistral, DeepSeek, etc.) fit this **without new client code** as
+**Open models** (Llama, Gemma, Mistral, etc.) fit this **without new client code** as
 long as they are served behind an **OpenAI-compatible endpoint** — vLLM, Ollama, Together,
 OpenRouter, or a local server. Point `OPENAI_BASE_URL` at that endpoint and pass the served
 model name as `--mesh-model` / `--auditor-model`; unknown names fall through the `openai` branch

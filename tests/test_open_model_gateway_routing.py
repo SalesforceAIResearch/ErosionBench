@@ -55,10 +55,10 @@ def test_no_secondary_when_gateway_unconfigured(monkeypatch):
 
 def test_allowlist_parses_env_at_import(monkeypatch):
     # The module-level allowlist is built from EROSIONBENCH_OPEN_MODELS at import.
-    monkeypatch.setenv("EROSIONBENCH_OPEN_MODELS", " Llama-3.3-70B , qwen2.5-72b ")
+    monkeypatch.setenv("EROSIONBENCH_OPEN_MODELS", " Llama-3.3-70B , gemma-2-27b ")
     reloaded = importlib.reload(llm)
     try:
-        assert reloaded._OPEN_MODEL_ALLOWLIST == frozenset({"llama-3.3-70b", "qwen2.5-72b"})
+        assert reloaded._OPEN_MODEL_ALLOWLIST == frozenset({"llama-3.3-70b", "gemma-2-27b"})
     finally:
         monkeypatch.delenv("EROSIONBENCH_OPEN_MODELS", raising=False)
         importlib.reload(reloaded)

@@ -174,7 +174,7 @@ _LLM_GATEWAY_API_KEY: Optional[str] = os.getenv("LLM_GATEWAY_API_KEY")
 #: OpenAI-compatible schema. These resolve to the ``openai`` provider by name, but must ride
 #: the secondary (Bearer-auth) gateway -- otherwise their calls go to the frontier
 #: ``OPENAI_BASE_URL`` and fail. Set ``EROSIONBENCH_OPEN_MODELS`` to a comma-separated list of
-#: served-model-names (case-insensitive), e.g. ``llama-3.3-70b,qwen2.5-72b``.
+#: served-model-names (case-insensitive), e.g. ``llama-3.3-70b,gemma-2-27b``.
 _OPEN_MODEL_ALLOWLIST: frozenset = frozenset(
     m.strip().lower()
     for m in (os.getenv("EROSIONBENCH_OPEN_MODELS", "") or "").split(",")

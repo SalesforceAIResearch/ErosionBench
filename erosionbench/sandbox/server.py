@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 import time
 from contextlib import asynccontextmanager
@@ -50,13 +51,18 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — permissive so a future React frontend on another port can call these endpoints
-# unchanged. The endpoints are read-only telemetry + demo replay; no auth surface is exposed.
+# CORS — the bundled dashboard is same-origin, so cross-origin access is only needed for a local
+# frontend on another port. Default: localhost / 127.0.0.1 on any port, no credentials. Add other
+# trusted origins with EROSIONBENCH_CORS_ORIGINS (comma-separated).
+_LOCAL_ORIGIN_REGEX = r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$"
+_extra_origins = [o.strip() for o in os.getenv("EROSIONBENCH_CORS_ORIGINS", "").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=_extra_origins,
+    allow_origin_regex=_LOCAL_ORIGIN_REGEX,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "DELETE"],
+    allow_headers=["Content-Type", "X-Erosionbench-Session"],
 )
 
 # Mount domain routers
