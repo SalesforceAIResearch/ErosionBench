@@ -1,0 +1,37 @@
+# ErosionBench sandbox — the self-contained execution environment agents call as HTTP tools.
+# This image serves ONLY the sandbox (enterprise action endpoints + the document/corpus API +
+# admin telemetry). It runs offline: no LLM keys, no external services, deterministic.
+#
+# Build (from repo root, after `python3 scripts/download_data.py` has fetched data/shared_corpus/):
+#   docker build -f Dockerfile.sandbox -t erosionbench-sandbox .
+# No download yet? Bake in the bundled 12-doc sample corpus instead:
+#   docker build -f Dockerfile.sandbox --build-arg CORPUS_DIR=data/sample/shared_corpus -t erosionbench-sandbox .
+# Run (serves the baked-in corpus on :8199):
+#   docker run --rm -p 8199:8199 erosionbench-sandbox
+# Then browse the OpenAPI docs at http://localhost:8199/docs and the dashboard at /dashboard.
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# System deps: none required — every dep resolves to a pure-Python / manylinux wheel.
+# requirements-sandbox.txt is the empirically-verified top-level dep set (see that file's header).
+COPY erosionbench/sandbox/requirements-sandbox.txt /app/requirements-sandbox.txt
+RUN pip install --no-cache-dir -r /app/requirements-sandbox.txt
+
+# The sandbox package + the datagen modules it imports (needle_renderer/document_server/
+# corpus_builder) and the frozen corpus it serves.
+# CORPUS_DIR is relative to the build context (repo root).
+ARG CORPUS_DIR=data/shared_corpus
+COPY erosionbench/ /app/erosionbench/
+COPY ${CORPUS_DIR}/ /app/corpus/
+
+# Corpus is baked in and loaded at startup via the --corpus-dir flag (see CMD).
+ENV PYTHONUNBUFFERED=1
+EXPOSE 8199
+
+# --corpus-dir loads the frozen 4-domain corpus so /v1/docs/* serves real PDFs on boot.
+# Override the corpus at runtime with:  docker run ... erosionbench-sandbox \
+#   python -m erosionbench.sandbox.server --host 0.0.0.0 --port 8199 --corpus-dir /path
+CMD ["python", "-m", "erosionbench.sandbox.server", \
+     "--host", "0.0.0.0", "--port", "8199", \
+     "--corpus-dir", "corpus"]

@@ -1,46 +1,32 @@
-*This is a suggested `CONTRIBUTING.md` file template for use by open sourced Salesforce projects. The main goal of this file is to make clear the intents and expectations that end-users may have regarding this project and how/if to engage with it. Adjust as needed (especially look for `{project_slug}` which refers to the org and repo name of your project) and remove this paragraph before committing to your repo.*
+# Contributing Guide For ErosionBench
 
-# Contributing Guide For {NAME OF PROJECT}
-
-This page lists the operational governance model of this project, as well as the recommendations and requirements for how to best contribute to {PROJECT}. We strive to obey these as best as possible. As always, thanks for contributing – we hope these guidelines make it easier and shed some light on our approach and processes.
+This page lists the operational governance model of this project, as well as the recommendations and requirements for how to best contribute to ErosionBench. We strive to obey these as best as possible. As always, thanks for contributing – we hope these guidelines make it easier and shed some light on our approach and processes.
 
 # Governance Model
-> Pick the most appropriate one
-
-## Community Based
-
-The intent and goal of open sourcing this project is to increase the contributor and user base. The governance model is one where new project leads (`admins`) will be added to the project based on their contributions and efforts, a so-called "do-acracy" or "meritocracy" similar to that used by all Apache Software Foundation projects.
-
-> or
-
-## Salesforce Sponsored
-
-The intent and goal of open sourcing this project is to increase the contributor and user base. However, only Salesforce employees will be given `admin` rights and will be the final arbitrars of what contributions are accepted or not.
-
-> or
 
 ## Published but not supported
 
-The intent and goal of open sourcing this project is because it may contain useful or interesting code/concepts that we wish to share with the larger open source community. Although occasional work may be done on it, we will not be looking for or soliciting contributions.
+The intent and goal of open sourcing this project is because it may contain useful or interesting code/concepts that we wish to share with the larger open source community. ErosionBench is a research artifact released in support of an academic paper. Although occasional work may be done on it (bug fixes, documentation, and versioned dataset corrections recorded in the [dataset card changelog](DATASET_CARD.md#changelog)), we will not be looking for or soliciting contributions.
 
 # Getting started
 
-Please join the community on {Here list Slack channels, Email lists, Glitter, Discord, etc... links}. Also please make sure to take a look at the project [roadmap](ROADMAP.md) to see where we are headed.
+See the [README](README.md) for installation, the zero-download Quickstart on the bundled sample, and how to reproduce the paper's headline number. The dataset itself is hosted on the Hugging Face Hub at [`Salesforce/ErosionBench`](https://huggingface.co/datasets/Salesforce/ErosionBench).
 
 # Issues, requests & ideas
 
 Use GitHub Issues page to submit issues, enhancement requests and discuss ideas.
 
 ### Bug Reports and Fixes
--  If you find a bug, please search for it in the [Issues](https://github.com/{project_slug}/issues), and if it isn't already tracked,
-   [create a new issue](https://github.com/{project_slug}/issues/new). Fill out the "Bug Report" section of the issue template. Even if an Issue is closed, feel free to comment and add details, it will still
+-  If you find a bug, please search for it in the [Issues](https://github.com/SalesforceAIResearch/ErosionBench/issues), and if it isn't already tracked,
+   [create a new issue](https://github.com/SalesforceAIResearch/ErosionBench/issues/new). Include the command you ran, the mesh/auditor models, and the scenario IDs involved. Even if an Issue is closed, feel free to comment and add details, it will still
    be reviewed.
 -  Issues that have already been identified as a bug (note: able to reproduce) will be labelled `bug`.
--  If you'd like to submit a fix for a bug, [send a Pull Request](#creating_a_pull_request) and mention the Issue number.
+-  If you'd like to submit a fix for a bug, [send a Pull Request](#creating-a-pull-request) and mention the Issue number.
   -  Include tests that isolate the bug and verifies that it was fixed.
+-  **Dataset issues** (e.g. an unlandable contract, a mislabelled scenario, a benign twin that is not a valid control) are especially welcome. Fixes to the frozen pool are released as a new dataset version, never edited in place, so that reported numbers stay reproducible.
 
 ### New Features
--  If you'd like to add new functionality to this project, describe the problem you want to solve in a [new Issue](https://github.com/{project_slug}/issues/new).
+-  If you'd like to add new functionality to this project, describe the problem you want to solve in a [new Issue](https://github.com/SalesforceAIResearch/ErosionBench/issues/new).
 -  Issues that have been identified as a feature request will be labelled `enhancement`.
 -  If you'd like to implement the new feature, please wait for feedback from the project
    maintainers before spending too much time writing the code. In some cases, `enhancement`s may
@@ -50,11 +36,11 @@ Use GitHub Issues page to submit issues, enhancement requests and discuss ideas.
 -  If you'd like to improve the tests, you want to make the documentation clearer, you have an
    alternative implementation of something that may have advantages over the way it's currently
    done, or you have any other change, we would be happy to hear about it!
-  -  If it's a trivial change, go ahead and [send a Pull Request](#creating_a_pull_request) with the changes you have in mind.
-  -  If not, [open an Issue](https://github.com/{project_slug}/issues/new) to discuss the idea first.
+  -  If it's a trivial change, go ahead and [send a Pull Request](#creating-a-pull-request) with the changes you have in mind.
+  -  If not, [open an Issue](https://github.com/SalesforceAIResearch/ErosionBench/issues/new) to discuss the idea first.
 
-If you're new to our project and looking for some way to make your first contribution, look for
-Issues labelled `good first contribution`.
+### Security issues
+Do **not** open a public issue for a security vulnerability — report it as described in [SECURITY.md](SECURITY.md).
 
 # Contribution Checklist
 
@@ -64,9 +50,9 @@ Issues labelled `good first contribution`.
   - Module-level & function-level comments.
   - Comments on complex blocks of code or algorithms (include references to sources).
 - [x] Tests
-  - The test suite, if provided, must be complete and pass
+  - The test suite must be complete and pass: `pip install -e ".[dev]" && pytest tests/`
   - Increase code coverage, not versa.
-  - Use any of our testkits that contains a bunch of testing facilities you would need. For example: `import com.salesforce.op.test._` and borrow inspiration from existing tests.
+  - Borrow inspiration from existing tests under `tests/` (the sandbox tests spin up an in-process server).
 - [x] Dependencies
   - Minimize number of dependencies.
   - Prefer Apache 2.0, BSD3, MIT, ISC and MPL licenses.
@@ -99,4 +85,4 @@ clear and has sufficient instructions to be able to reproduce the issue.
 Please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 # License
-By contributing your code, you agree to license your contribution under the terms of our project [LICENSE](LICENSE.txt) and to sign the [Salesforce CLA](https://cla.salesforce.com/sign-cla)
+By contributing your code, you agree to license your contribution under the terms of our project [LICENSE](LICENSE.txt) and to sign the [Salesforce CLA](https://cla.salesforce.com/sign-cla). Contributions to the dataset or corpus are licensed under [CC-BY-4.0](DATA_LICENSE).
