@@ -175,14 +175,16 @@ below for the calibrated headline.
 
 ## Reproduce the headline number
 
-> ⚠ **Requires the fetched dataset.** This path reads `data/eval.json`, `data/shared_corpus/`, and the
+> ⚠ **Requires the fetched dataset.** This path reads `data/eval_clean_control.json`, `data/shared_corpus/`, and the
 > frozen `artifacts/artifact.json` — the data is obtained via `download_data.py` (see *Install*). No download yet? Use the
 > bundled `data/sample/` (see *Run a different auditor → Option 1*) instead — the calibrated code path
 > there is identical, only the split size (and therefore the reported numbers) differs.
 
 The headline (L5 recall/FPR at the split-conformal operating point) is scored **once** over the
-held-out `eval.json` with the **frozen calibration artifact** via `run_final_eval.py`. It is
-parameterized by environment variables (defaults reproduce the reference opus-4-8 run):
+held-out **clean-control arm** (`eval_clean_control.json`: `eval.json`'s 453 malicious scenarios + 453
+validity-matched benign controls) with the **frozen calibration artifact** via `run_final_eval.py`.
+It is parameterized by environment variables (the values below reproduce the reference opus-4-8 run;
+the script's default dataset is `data/eval.json`, the original 604-scenario split):
 
 ```bash
 # 1. Start the offline sandbox tool server (serves the real PDF corpus)
@@ -190,7 +192,7 @@ python3 -m erosionbench.sandbox.server --port 8223 --corpus-dir data/shared_corp
 
 # 2. Score the held-out split with the frozen artifact (mesh=gpt-5.5, auditor=claude-opus-4-8)
 export EROSIONBENCH_SANDBOX_URL=http://127.0.0.1:8223
-export EVAL_DATASET=data/eval.json          # held-out split
+export EVAL_DATASET=data/eval_clean_control.json  # held-out clean-control arm (paper headline)
 export EVAL_ARTIFACT=artifacts/artifact.json  # frozen Platt + conformal τ (auditor-specific)
 export EVAL_MESH_MODEL=gpt-5.5
 export EVAL_AUDITOR_MODEL=claude-opus-4-8    # MUST match the auditor the artifact was fit on
@@ -200,7 +202,8 @@ python3 scripts/run_final_eval.py
 
 The artifact is **auditor-specific** and **leak-guarded**: `from_artifact` refuses to run if any
 evaluation family overlaps a calibration family, so a mismatched auditor or a calib/eval leak fails
-loud. Report the number on **`eval.json` only** (the held-out split); the calibration split is for
+loud. Report the number on the **held-out evaluation families only** (`eval_clean_control.json` or
+`eval.json`); the calibration split is for
 fitting the detector's operating point. Scoring is **fail-closed**: scenarios that error out are
 retried and then **excluded** from the denominator (checkpointed to JSONL, so a crash resumes), so
 the effective *n* can be below the nominal split size — report it.

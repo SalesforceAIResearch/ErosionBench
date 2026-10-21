@@ -94,7 +94,7 @@ The corpus PDFs are LLM-blended and **NOT byte-reproducible from the seed**, so 
 **freeze + prove**: ship the frozen bytes, and prove integrity by re-hashing.
 
 ```bash
-# 1. every shipped file matches its recorded SHA-256 (41 files; paths are relative to data/):
+# 1. every shipped file matches its recorded SHA-256 (42 files; paths are relative to data/):
 (cd data && grep '^[0-9a-f]' PROVENANCE_hashes.txt | shasum -a 256 -c -)
 
 # 2. the dataset composition gate (0 refusals, 0 wrapper-meta leakage):
