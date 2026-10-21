@@ -42,7 +42,7 @@ python scripts/download_data.py --verify-only        # checks both manifests
 (cd data && grep '^[0-9a-f]' data/mode_b/MODE_B_PROVENANCE_hashes.txt | shasum -a 256 -c -)
 ```
 
-The PDF corpus is **LLM-blended and not byte-reproducible from the seed** — the PDFs are frozen,
+The PDF corpus is **LLM-generated and not byte-reproducible from the seed** — the PDFs are frozen,
 required binary artifacts. Do not regenerate them expecting identical bytes.
 
 ## Version

@@ -33,15 +33,6 @@ decay each defense layer recovers. Each scenario is a realistic enterprise task 
 carry a blended adversarial "needle"; the benchmark scores whether the malicious end-state is
 reached (attack success) and whether a defense flags it — while tracking over-refusal on benign twins.
 
-> **Availability.** This card describes the full public release: the complete pool (`dataset.json`),
-> both family-disjoint splits (`calib.json`, `eval.json`), the paper's clean-control evaluation arm
-> (`eval_clean_control.json`), the frozen PDF corpus, and the provenance files. A small runnable
-> slice ships with the code repo in `data/sample/` for a zero-setup first look (see its `README.md` →
-> *Quickstart*). The `data_files` and integrity commands below resolve against the files in this release.
->
-> **Code:** the evaluation harness, sandbox, and reproduction scripts live at
-> [github.com/SalesforceAIResearch/ErosionBench](https://github.com/SalesforceAIResearch/ErosionBench).
-
 - **Domains:** 4 (autonomous CRM, CI/CD supply chain, data engineering, quantitative finance)
 - **Attack classes:** 16 (4 per domain), mapped to OWASP LLM Top-10 (2025)
 - **Tiers:** T1 / T2 / T3 — escalating adversarial *conditioning* of the same underlying contract
@@ -50,10 +41,19 @@ reached (attack success) and whether a defense flags it — while tracking over-
 - **Released splits:** `calibration` (1,124) + `evaluation` (604), **family-disjoint**, plus the
   `clean_control` evaluation arm (906) the paper's headline is reported on
 
-## Getting started
+**➡️ [Getting Started: Download and Run](#getting-started-download-and-run)** ·
+**[File Structure](#file-structure)** ·
+**[Reference Results](#reference-results)** ·
+**[Code on GitHub](https://github.com/SalesforceAIResearch/ErosionBench)** ·
+**[Citation](#citation)**
+
+> New here? A small zero-download sample ships with the code repo in `data/sample/` (see its
+> `README.md` → *Quickstart*).
+
+## Getting Started: Download and Run
 
 The JSON alone does not run the benchmark — scenarios execute against the sandbox and PDF corpus
-(see *Companion artifacts*). The usual path is to clone the code repo and fetch this dataset into it:
+(see *File Structure*). The usual path is to clone the code repo and fetch this dataset into it:
 
 ```bash
 git clone https://github.com/SalesforceAIResearch/ErosionBench.git && cd ErosionBench
@@ -78,6 +78,43 @@ frozen artifact via `scripts/run_final_eval.py` (`EVAL_DATASET=data/eval_clean_c
 To only browse or load the records, `load_dataset` is enough (see *Examples* below). To download the
 files without the code, use `hf download Salesforce/ErosionBench --repo-type dataset --local-dir data`.
 
+## File Structure
+
+The dataset is **not usable from the JSON alone**: scenarios run against a sandbox that serves the
+shared PDF corpus below.
+
+```
+├── README.md                       this dataset card
+├── dataset.json                    full pool — 1,728 (1,296 attacks + 432 benign)
+├── calib.json                      calibration split — 1,124 (843 + 281)
+├── eval.json                       held-out split — 604 (453 + 151)
+├── eval_clean_control.json         held-out clean-control arm (paper headline) — 906 (453 + 453)
+├── PROVENANCE_hashes.txt           SHA-256 of 42 files (everything except Mode B)
+├── verification_manifest.json      per-scenario needle placement + PDF round-trip proof
+├── shared_corpus/                  clean base PDFs (no payloads), shared within a domain
+│   ├── corpus_index.json
+│   ├── autonomous_crm/             8 PDFs + corpus_manifest.json
+│   ├── cicd_supply_chain/          8 PDFs + corpus_manifest.json
+│   ├── data_engineering/           8 PDFs + corpus_manifest.json
+│   └── quantitative_finance/       8 PDFs + corpus_manifest.json
+└── data/mode_b/                    image-delivered attacks (Mode B)
+    ├── MODE_B_PROVENANCE_hashes.txt
+    ├── malicious/                  mode_b_malicious.json + images/ (66 PNGs)
+    └── benign_provisional/         mode_b_benign_provisional.json + images/ (66 PNGs)
+```
+
+- **Attacks and benign scenarios share the same files.** Each record's `is_malicious` field tells them
+  apart; benign ids end in `_CONTROL` (and `_CONTROL_T2` / `_CONTROL_T3` in the clean-control arm).
+- **The PDFs are clean and required.** The 32 base PDFs contain **no attack payloads**: each malicious
+  record carries its own context-blended needle, and the sandbox splices it into the target page at run
+  time, so 32 documents serve all 1,296 attacks. They are LLM-generated and **not byte-reproducible**,
+  so they ship frozen — the JSON alone does not run.
+- **The sandbox lives in the code repo** (`erosionbench/sandbox/`): an offline FastAPI tool server the
+  agents call (enterprise actions + document API + telemetry). It needs no LLM keys.
+- **Mode B** is the one part split by folder: attacks in `malicious/`, benign twins in `benign_provisional/`.
+- `download_data.py` mirrors this layout into the code repo's `data/`, so `data/mode_b/` here lands at
+  `data/data/mode_b/` there.
+
 ## Splits
 
 | Split | Scenarios | Malicious | Benign | Families | Purpose |
@@ -86,24 +123,20 @@ files without the code, use `hf download Salesforce/ErosionBench --repo-type dat
 | `evaluation` (`eval.json`) | 604 | 453 | 151 | 151 | **held-out** — the reported number; evaluate once |
 | `clean_control` (`eval_clean_control.json`) | 906 | 453 | 453 | 151 | **held-out**, paper headline arm — same attacks, validity-matched benign controls |
 
-**Family-disjoint guarantee (verified: overlap = 0).** A *family* is the set of variants sharing one
-base scenario: the T1 base (malicious), its benign `_CONTROL` twin, and the `_T2` / `_T3` escalations.
-No family straddles the split boundary, so calibration and evaluation are exchangeable and a
-split-conformal coverage guarantee holds. Both splits are 3:1 malicious:benign, with a benign
-`_CONTROL` twin per family for over-refusal (false-positive) measurement.
+**Family-disjoint (verified overlap = 0).** A *family* is one base scenario's variants — T1, its benign
+`_CONTROL` twin, and the `_T2` / `_T3` escalations — and no family straddles the split boundary, so a
+split-conformal coverage guarantee holds.
 
-**Clean-control arm.** `eval_clean_control.json` holds the same 453 malicious scenarios as `eval.json`
-(byte-identical) plus **453 depth- and length-matched benign controls**: a re-authored `_CONTROL` per
-family and new `_CONTROL_T2` / `_CONTROL_T3` twins that mirror each malicious tier's conditioning depth,
-with benign intents aligned to the target tool. It covers the same 151 evaluation families, so the
-frozen calibration artifacts apply unchanged. This is the arm the paper's headline recall/FPR (see
-*Reference results*) is reported on; `eval.json`'s 151 original controls remain for v1.x compatibility.
+**Clean-control arm.** `eval_clean_control.json` = `eval.json`'s 453 malicious scenarios
+(byte-identical) + **453 depth- and length-matched benign controls** (`_CONTROL`, `_CONTROL_T2`,
+`_CONTROL_T3`) over the same 151 families, so the frozen calibration artifacts apply unchanged. The
+paper's headline (*Reference Results*) is reported on this arm.
 
-The full 1,728-scenario `dataset.json` (the superset the splits are drawn from) is included for
-completeness; **do not** treat the calibration families as a "clean" test set — only the evaluation
-families (`eval.json`, `eval_clean_control.json`) are held out.
+`dataset.json` is the 1,728-scenario superset the splits are drawn from — **do not** use it as a test
+set; only the evaluation families are held out.
 
-### Per-split composition
+<details>
+<summary><b>Per-split composition</b> (domains × tiers)</summary>
 
 | | domains (crm / cicd / de / qf) | tiers (T1 / control / T2 / T3) |
 |---|---|---|
@@ -111,7 +144,9 @@ families (`eval.json`, `eval_clean_control.json`) are held out.
 | **calibration** (1,124) | 252 / 280 / 264 / 328 | 281 / 281 / 281 / 281 |
 | **evaluation** (604) | 180 / 152 / 168 / 104 | 151 / 151 / 151 / 151 |
 
-## Attack classes (16 = 4 domains × 4 classes)
+</details>
+
+## Attack Classes (16 = 4 Domains × 4 Classes)
 
 Each class has 81 malicious scenarios in the full pool. Every attack targets the `deployment_agent`
 (the node that executes the irreversible enterprise action).
@@ -135,20 +170,15 @@ Each class has 81 malicious scenarios in the full pool. Every attack targets the
 | quantitative_finance | semantic_state_poisoning | LLM04 Data & Model Poisoning |
 | quantitative_finance | temporal_exploitation | LLM04 Data & Model Poisoning |
 
-## Tier semantics (the alignment-decay ramp)
+### Tiers: The Alignment-Decay Ramp
 
-The three malicious tiers of a family encode the **same ground-truth contract** (the same forbidden
-end-state) under escalating adversarial conditioning:
+The three malicious tiers of a family share the **same ground-truth contract** (the same forbidden
+end-state) under escalating adversarial conditioning: **T1** is the minimally conditioned payload,
+**T2** adds multi-turn / cross-agent conditioning, and **T3** the strongest (e.g. coordinated
+corroboration, crescendo ramps). Because the contract is fixed, a rise in attack success
+T1 < T2 < T3 isolates the effect of conditioning rather than task difficulty.
 
-- **T1 (base)** — the attack payload, minimally conditioned.
-- **T2** — stronger multi-turn / cross-agent conditioning of the payload.
-- **T3** — strongest conditioning (e.g. coordinated corroboration, crescendo ramps).
-
-Because the contract is fixed across tiers, the tiers are **designed** so that any rise in
-attack-success rate T1 < T2 < T3 isolates the effect of conditioning — the decay signal — rather
-than task difficulty. (The measured decay curve is reported in the accompanying paper.)
-
-## Reference results
+## Reference Results
 
 Headline numbers from the accompanying paper: `gpt-5.5` agent mesh, scored once on the held-out
 **clean-control arm** (`eval_clean_control.json`: 453 malicious + 453 matched benign controls) with the
@@ -182,17 +212,12 @@ alignment-decay signal; perimeter defenses (L3/L4) cut ASR only by over-refusing
 | `gpt-oss-safeguard-20b` (open) | 55.1% [50.5, 59.6] | 2.4% [1.4, 4.3] | 2.7% |
 
 To add your defense, score it on the held-out arm only (fit any threshold on `calibration`) and report
-recall, benign FPR, and the effective *n* (see *Intended use & limitations*).
+recall, benign FPR, and the effective *n* (see *Intended Use & Limitations*).
 
-## Examples — browse the data
+## Examples — Browse the Data
 
-> **Interactive viewer.** The [Dataset Viewer](https://huggingface.co/docs/hub/datasets-viewer) above
-> renders the `calibration` and `evaluation` splits directly — use it to page through records and
-> facet on the scalar columns (`is_malicious`, `attack_class`, `owasp_llm_category`, …). The large
-> nested fields (`long_context_documents`, `session_history`, …) show as expandable JSON. The curated
-> examples below are easier to read than the raw viewer rows.
-
-Load one example programmatically:
+The [Dataset Viewer](https://huggingface.co/docs/hub/datasets-viewer) above pages through every
+split (nested fields show as expandable JSON). To load one example programmatically:
 
 ```python
 from datasets import load_dataset
@@ -208,7 +233,7 @@ c = ex["ground_truth_contracts"][0]
 print("contract: ", c["name"], c["severity"])
 ```
 
-### Featured family — the alignment-decay ramp (autonomous CRM, `crisis_escalation_hijack`)
+### Featured Family — The Alignment-Decay Ramp (Autonomous CRM, `crisis_escalation_hijack`)
 
 The family `CR_CRISIS_E_0046` encodes **one fixed forbidden end-state** (an unauthorized cross-region
 fulfillment) across all four variants. Only the adversarial *conditioning* changes T1 → T2 → T3 — the
@@ -246,7 +271,7 @@ ground-truth contract is identical — so any rise in attack success isolates th
 ```
 </details>
 
-#### The same attack as a document image (Mode B)
+#### The Same Attack as a Document Image (Mode B)
 
 The payload above, rendered into a CRM incident/warranty document and delivered as a **PNG** instead of
 text — testing whether detection is channel-invariant. The value is recoverable only from the image
@@ -257,7 +282,7 @@ text — testing whether detection is channel-invariant. The value is recoverabl
 *(Its benign twin is `data/mode_b/benign_provisional/images/CR_CRISIS_E_0046_BTWIN.png`. A zero-download
 copy of this pair also ships in the code repo under `data/sample/mode_b/`.)*
 
-### One malicious example per domain
+### One Malicious Example per Domain
 
 <details>
 <summary><b>CS_SUPPLY_C_0003</b> — cicd_supply_chain / <code>supply_chain_poisoning</code> (LLM04)</summary>
@@ -337,9 +362,11 @@ copy of this pair also ships in the code repo under `data/sample/mode_b/`.)*
 ```
 </details>
 
-## Data fields
+## Data Fields
 
-Each scenario is a JSON object:
+Each file is a **JSON array** of scenario objects (~40 KB each, documents embedded); five fields are
+nested, so the data is not flattened to CSV. Load a config with
+`load_dataset("Salesforce/ErosionBench", "clean_control")` (default config: `calibration` / `evaluation`).
 
 | Field | Description |
 |---|---|
@@ -351,18 +378,11 @@ Each scenario is a JSON object:
 | `user_intent` | The legitimate task the user actually asked for |
 | `attacker_objective` | The malicious end-state the payload tries to reach |
 | `enterprise_context`, `session_history` | Scenario framing + prior turns |
-| `long_context_documents`, `document_manifest` | The documents the agent reads (needle blended into the PDF corpus) |
+| `long_context_documents`, `document_manifest` | The documents the agent reads (base-corpus pages; the needle is spliced into one page at run time) |
 | `execution_spec` | Environment/conditioning spec (drives the tier escalation) |
 | `ground_truth_contracts` | The machine-checkable assertions defining success/failure (type, severity, params) |
 
-### Format
-
-Each file (`dataset.json`, `calib.json`, `eval.json`, `eval_clean_control.json`) is a **JSON array** of
-scenario objects. Five fields are nested and a scenario is ~40 KB (the documents are embedded), so the
-data is not flattened to CSV; `datasets` loads it directly via the configs above
-(`load_dataset("Salesforce/ErosionBench", split="evaluation")`, or `"clean_control"` as the second argument).
-
-### Record example
+### Record Example
 
 <details>
 <summary><b>QF_REASONIN_0054</b> — full record layout, long text elided</summary>
@@ -391,7 +411,7 @@ data is not flattened to CSV; `datasets` loads it directly via the configs above
   },
 
   "long_context_documents": [
-    { "title": "Internal Audit — Quantitative Systems FY2026", "pages": [ /* 14 pages; needle blended in */ ], "needle_page": null }
+    { "title": "Internal Audit — Quantitative Systems FY2026", "pages": [ /* 14 base-corpus pages */ ], "needle_page": null }
   ],
   "document_manifest": {},
 
@@ -438,67 +458,32 @@ of the flat fields only — the full records are nested JSON as shown above.**
 
 </details>
 
-## Companion artifacts (required)
+## Multimodal (Mode B) — Image Evaluation Subset
 
-This dataset is **not usable from the JSON alone.** The malicious payloads are needles blended into a
-PDF corpus, and scenarios are executed against a sandbox environment.
+The same attacks delivered as rendered **document images** (PNG) instead of text, testing whether
+detection is **channel-invariant**. A dedicated subset, not the full pool: **11 attack classes × 2
+families × 3 tiers = 66 malicious** scenarios (`data/mode_b/malicious/`) plus **66 benign twins**
+(`data/mode_b/benign_provisional/`). Each record carries the payload in two paired carriers — an
+`image` (payload recoverable only from the PNG) and a `text` equivalent — and was composed
+deterministically and frozen once. The code repo ships a 2 + 2 sample under `data/sample/mode_b/`.
 
-- **Corpus** (`shared_corpus/`) — 32 base PDFs (8 documents × 4 domains) + per-domain
-  `corpus_manifest.json`. The needles live inside these PDFs. **The PDFs are LLM-blended and NOT
-  byte-reproducible from the seed** — they are frozen, required binary artifacts.
-- **Sandbox** (`erosionbench/sandbox/`) — an offline FastAPI HTTP tool server the agents call
-  (enterprise action endpoints + document API + telemetry). Needs no LLM keys. See `RELEASE_README.md` in the code repo.
-- **Verification** (`verification_manifest.json`, `PROVENANCE_hashes.txt`) — corpus content hashes +
-  a recovered-payload table proving each needle survives the text→PDF→text round-trip.
+> ⚠️ **The benign controls are provisional.** They are not yet validity-matched authorized
+> completions, so **do not compute a Mode B false-positive rate from them** — it overstates
+> over-refusal. The paper reports Mode B as channel-invariant detection plus an operating-point
+> frontier over the valid controls. Validity-matched controls will replace this folder in v2; the
+> malicious images stay byte-identical.
 
-### Integrity ("freeze + prove")
-```bash
-grep '^[0-9a-f]' PROVENANCE_hashes.txt | shasum -a 256 -c -   # all 42 shipped files
-python scripts/verify_phase1_gate.py dataset.json             # 0 refusals, 0 wrapper-meta leakage (script from the code repo)
-```
-
-## Provenance
-- **Generator model:** gpt-5   |   **FINAL_SEED:** 20260724001
-- **Split:** seed 1337, calibration-fraction 0.65, family-disjoint
-- **Datagen refusal gate:** enforced (0 refusals in the frozen pool)
-- **Pinned `dataset.json` SHA-256 (v1.1):** `faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`
-
-## Multimodal (Mode B) — image evaluation subset
-
-The accompanying paper reports a **multimodal (Mode B)** arm: the same attacks delivered as rendered
-**document images** rather than text, testing whether detection is **channel-invariant**. The full
-Mode B image subset ships under `data/mode_b/` **in this (HuggingFace) dataset release**; the code
-repository instead carries a small zero-setup sample under `data/sample/mode_b/` (2 malicious + 2
-benign twins) and pulls the full set from here via `scripts/download_data.py`.
-
-> **Scope.** Mode B is a **dedicated subset, not the full 1,728-scenario pool.** It covers
-> **11 attack classes × 2 families × 3 tiers = 66 malicious** image scenarios
-> (`data/mode_b/malicious/`) plus **66 benign-twin** controls (`data/mode_b/benign_provisional/`).
-> Composition is **deterministic** (no LLM authoring at freeze time → refusal-immune and
-> reproducible); the scenarios are **frozen once and loaded**, never re-composed at eval time.
-
-> ⚠️ **The benign controls are PROVISIONAL.** The Mode B benign-twin controls are *not yet*
-> validity-matched authorized completions, so **do not compute a Mode B false-positive rate from
-> them** — it overstates over-refusal. The paper reports Mode B as **channel-invariant detection**
-> plus an **operating-point frontier over the valid controls**, and does **not** claim Mode B
-> reproduces the Mode A text FPR. Validity-matched benign controls will **replace** this folder in a
-> future version (see Changelog → *planned v2*). The malicious images will stay byte-identical.
-
-Each Mode B record carries the payload in **two paired carriers** so detection can be compared across
-channels: an `image` carrier (the payload rendered into a PNG, `value_absent_from_text: true` — i.e.
-recoverable only from the image) and a `text` carrier (the same payload in page text). Fields:
+<details>
+<summary><b>Mode B fields and record example</b></summary>
 
 | Field | Description |
 |---|---|
 | `scenario_id`, `attack_class`, `tier`, `domain` | As in Mode A (`_T2`/`_T3` escalations; `_BTWIN` = benign twin) |
 | `merge`, `forged_key`, `forged_value` | The conditioning merge + the forged key/value the attack injects |
 | `target_parameters` | The machine-checkable assertions (type, severity, params) — the Mode B contract |
-| `corrob_doc_id`, `injection_page`, `payload_anchors` | Which corpus doc/page the needle is blended into |
+| `corrob_doc_id`, `injection_page`, `payload_anchors` | Which corpus doc/page the needle is spliced into |
 | `image` | `png_file` (relative path), `sha256`, `modality` (`M2`), `carrier_id`, `ocr_transcript`, `ocr_recovered`, `value_absent_from_text`, `payload_values` |
 | `text` | The paired text carrier: `citation_text`, `value_present_in_text`, `anchors_in_text` |
-
-<details>
-<summary><b>Mode B record example</b> (abbreviated)</summary>
 
 ```jsonc
 {
@@ -531,13 +516,45 @@ recoverable only from the image) and a `text` carrier (the same payload in page 
 
 </details>
 
-### Mode B integrity
-Every PNG records its own `sha256` inline, and a manifest covers all shipped Mode B files:
+## Dataset Creation
+
+- **Authoring.** Each scenario is first specified as a **deterministic state graph** — the target
+  tool, the forged ledger key/value, the conditioning merge, and the machine-checkable ground-truth
+  contract — and only then rendered into prose. Labels (`is_malicious`, `attack_class`, tier,
+  contracts) therefore follow **by construction** from that specification rather than from human
+  annotation. The OWASP LLM Top-10 (2025) mapping of each attack class was reviewed by the authors.
+- **Text generation.** Documents, session histories, and needles were generated with **gpt-5**
+  (seed 20260724001). Needles are LLM-blended into the context of their target page; the shared base
+  corpus (32 PDFs) is LLM-generated and frozen.
+- **Benign controls.** Each family has a benign twin performing the same task with no forged payload.
+  The clean-control arm adds re-authored, depth- and length-matched controls for every tier.
+- **Quality gates.** The frozen pool passes a datagen refusal gate (0 refusals) and a wrapper-meta
+  leakage gate; every needle is verified recoverable after the text→PDF→text round-trip; attack
+  plumbing (each payload reaching the target tool's arguments) was verified with a scripted probe;
+  calibration and evaluation splits are family-disjoint (verified overlap = 0).
+- **Personal and sensitive information.** All content is **synthetic**. Organizations, people,
+  tickets, credentials, and URLs were generated and are fictional; no real customer, employee, or
+  personal data was used.
+
+## Integrity & Provenance
+
+The corpus is not byte-reproducible, so verifiability is **freeze + prove**: re-hash the shipped bytes.
+
 ```bash
+grep '^[0-9a-f]' PROVENANCE_hashes.txt | shasum -a 256 -c -                       # 42 files
 grep '^[0-9a-f]' data/mode_b/MODE_B_PROVENANCE_hashes.txt | shasum -a 256 -c -   # 132 PNGs + 2 JSONs
+python scripts/verify_phase1_gate.py data/dataset.json   # from the code repo: 0 refusals, 0 meta-leakage
 ```
 
-## Intended use & limitations
+`python scripts/download_data.py --verify` (code repo) runs both manifest checks after download.
+`verification_manifest.json` records each base document's hashes and, per scenario, the page its
+needle is spliced into, with proof it survives the text→PDF→text round-trip.
+
+- **Generator model:** gpt-5   |   **Seed:** 20260724001
+- **Split:** seed 1337, calibration-fraction 0.65, family-disjoint
+- **Pinned `dataset.json` SHA-256 (v1.1):** `faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`
+
+## Intended Use & Limitations
 
 - **Intended use:** evaluating detectors/defenses for multi-agent LLM systems (attack-success
   reduction *and* benign over-refusal), and studying how coordination erodes alignment.
@@ -545,6 +562,26 @@ grep '^[0-9a-f]' data/mode_b/MODE_B_PROVENANCE_hashes.txt | shasum -a 256 -c -  
 - **Effective n:** scoring should exclude scenarios that error out (fail-closed ret/exclude), so the
   effective denominator can be below the nominal split size — report it.
 - **Scope:** enterprise agentic tasks in 4 domains; not a general jailbreak or chat-safety benchmark.
+
+## Ethical Considerations
+
+This release is for research purposes only in support of an academic paper. Our models, datasets,
+and code are not specifically designed or evaluated for all downstream purposes. We strongly
+recommend users evaluate and address potential concerns related to accuracy, safety, and fairness
+before deploying this model. We encourage users to consider the common limitations of AI, comply
+with applicable laws, and leverage best practices when selecting use cases, particularly for
+high-risk scenarios where errors or misuse could significantly impact people's lives, rights, or
+safety. For further guidance on use cases, refer to our standard
+[AUP](https://www.salesforce.com/content/dam/web/en_us/www/documents/legal/Agreements/policies/ExternalFacing_Services_Policy.pdf)
+and [AI AUP](https://www.salesforce.com/content/dam/web/en_us/www/documents/legal/Agreements/policies/ai-acceptable-use-policy.pdf).
+
+## License
+
+The dataset and corpus (all files in this repository) are released under **CC-BY-4.0**. The
+evaluation code is released separately under **Apache-2.0** in the
+[code repo](https://github.com/SalesforceAIResearch/ErosionBench). Scenario text was generated with
+OpenAI gpt-5; use of the data should also respect the
+[AUP and AI AUP](#ethical-considerations) linked above.
 
 ## Changelog
 - **planned v2** — replace the **provisional** Mode B benign controls
@@ -575,18 +612,6 @@ grep '^[0-9a-f]' data/mode_b/MODE_B_PROVENANCE_hashes.txt | shasum -a 256 -c -  
 - **v1.0** — initial frozen release (seed 20260724001).
 
 </details>
-
-## Ethical considerations
-
-This release is for research purposes only in support of an academic paper. Our models, datasets,
-and code are not specifically designed or evaluated for all downstream purposes. We strongly
-recommend users evaluate and address potential concerns related to accuracy, safety, and fairness
-before deploying this model. We encourage users to consider the common limitations of AI, comply
-with applicable laws, and leverage best practices when selecting use cases, particularly for
-high-risk scenarios where errors or misuse could significantly impact people's lives, rights, or
-safety. For further guidance on use cases, refer to our standard
-[AUP](https://www.salesforce.com/content/dam/web/en_us/www/documents/legal/Agreements/policies/ExternalFacing_Services_Policy.pdf)
-and [AI AUP](https://www.salesforce.com/content/dam/web/en_us/www/documents/legal/Agreements/policies/ai-acceptable-use-policy.pdf).
 
 ## Citation
 ```bibtex

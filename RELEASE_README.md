@@ -19,7 +19,7 @@ relative to the repository root after that download.
 | Part | Path | What it is |
 |---|---|---|
 | **1. Dataset** | `data/{dataset,calib,eval}.json` | 1,728-scenario pool + family-disjoint calibration (1,124) / held-out eval (604) splits |
-| **2. Corpus** | `data/shared_corpus/` | 32 base PDFs (8 docs × 4 domains) + per-domain `corpus_manifest.json`. Malicious payloads are needles blended into these PDFs. **Required, non-reproducible binary artifacts.** |
+| **2. Corpus** | `data/shared_corpus/` | 32 clean base PDFs (8 docs × 4 domains) + per-domain `corpus_manifest.json`. The PDFs carry no payloads; each malicious scenario's needle is spliced into its target page by the sandbox at run time. **Required, non-reproducible binary artifacts.** |
 | **3. Sandbox** | `erosionbench/sandbox/` | Offline FastAPI HTTP tool server the agents call (enterprise actions + document API + telemetry) |
 | **4. Provenance** | `data/verification_manifest.json`, `data/PROVENANCE_hashes.txt` | Corpus content hashes + recovered-payload table (all 4 domains); SHA-256 of every shipped file |
 
@@ -90,7 +90,7 @@ The agents interact with it purely as **REST tool-calls** — it is not a shell.
 
 ## Verify integrity
 
-The corpus PDFs are LLM-blended and **NOT byte-reproducible from the seed**, so verifiability is
+The corpus PDFs are LLM-generated and **NOT byte-reproducible from the seed**, so verifiability is
 **freeze + prove**: ship the frozen bytes, and prove integrity by re-hashing.
 
 ```bash

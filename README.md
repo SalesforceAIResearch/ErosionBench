@@ -335,8 +335,8 @@ ErosionBench/
 > which is **not** in the code bundle (fetch it via `download_data.py` — see *Install*). The hash check
 > runs against files that ship. With only `data/sample/`, skip the gate command.
 
-The malicious payloads are needles blended into a PDF corpus that is **not byte-reproducible from a
-seed** — the PDFs are frozen, required binary artifacts. Provenance is proven by re-hashing + a
+The base PDF corpus is clean (each malicious scenario's needle is spliced into its target page by the
+sandbox at run time) and **not byte-reproducible from a seed** — the PDFs are frozen, required binary artifacts. Provenance is proven by re-hashing + a
 recovered-payload capturability table.
 
 ```bash
