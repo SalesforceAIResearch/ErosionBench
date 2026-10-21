@@ -17,9 +17,10 @@ This populates the following into `data/`:
 | `data/dataset.json` | Full 1,728-scenario pool (superset; **not** a clean test set) |
 | `data/calib.json` | Calibration split — 1,124 scenarios, 281 families |
 | `data/eval.json` | **Held-out** evaluation split — 604 scenarios, 151 families |
+| `data/eval_clean_control.json` | **Held-out** clean-control arm (paper headline) — `eval.json`'s 453 malicious + 453 validity-matched benign controls, same 151 families |
 | `data/shared_corpus/` | 32 base PDFs (8 docs × 4 domains) + per-domain `corpus_manifest.json` |
 | `data/verification_manifest.json` | Recovered-payload capturability table |
-| `data/PROVENANCE_hashes.txt` | SHA-256 of every file above (41 files) |
+| `data/PROVENANCE_hashes.txt` | SHA-256 of every file above (42 files) |
 | `data/data/mode_b/` | Multimodal (Mode B) subset: 66 malicious + 66 provisional benign image scenarios, with `MODE_B_PROVENANCE_hashes.txt` |
 
 The Hub repo root is mirrored into `data/`, so the Hub's own `data/mode_b/` folder lands at
@@ -41,7 +42,7 @@ python scripts/download_data.py --verify-only        # checks both manifests
 (cd data && grep '^[0-9a-f]' data/mode_b/MODE_B_PROVENANCE_hashes.txt | shasum -a 256 -c -)
 ```
 
-The PDF corpus is **LLM-blended and not byte-reproducible from the seed** — the PDFs are frozen,
+The PDF corpus is **LLM-generated and not byte-reproducible from the seed** — the PDFs are frozen,
 required binary artifacts. Do not regenerate them expecting identical bytes.
 
 ## Version
