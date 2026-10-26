@@ -47,5 +47,5 @@ required binary artifacts. Do not regenerate them expecting identical bytes.
 
 ## Version
 
-Current: **v1.1** — see the [changelog](../DATASET_CARD.md#changelog).
-Pinned `dataset.json` SHA-256: `faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`.
+Current: **v1.3** — see the [changelog](../DATASET_CARD.md#changelog).
+Pinned `dataset.json` SHA-256 (unchanged since v1.1): `faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`.

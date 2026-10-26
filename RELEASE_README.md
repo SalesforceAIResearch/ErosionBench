@@ -66,7 +66,7 @@ No download yet? Build against the bundled 12-doc sample corpus instead:
 
 ### Option B: local Python (3.13)
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
+python3.13 -m venv .venv && source .venv/bin/activate   # Python 3.11+ (not macOS system 3.9)
 pip install -r erosionbench/sandbox/requirements-sandbox.txt
 python -m erosionbench.sandbox.server --port 8199 --corpus-dir data/shared_corpus
 ```

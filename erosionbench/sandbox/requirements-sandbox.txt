@@ -16,6 +16,8 @@ python-dotenv>=1.0.0
 
 # PDF corpus rendering (document API renders benign base docs + spliced needle to PDF)
 fpdf2>=2.7.0
+# Verifies a spliced needle actually landed in the rendered PDF before serving it
+pypdf>=4.0.0
 
 # Transitively required by the datagen corpus_builder dataclasses the sandbox imports.
 # (import-time only; the sandbox makes no LLM calls)

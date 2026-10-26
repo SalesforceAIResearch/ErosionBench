@@ -8,6 +8,7 @@ abstract: >-
   domains and 16 attack classes mapped to the OWASP LLM Top-10 (2025), with
   family-disjoint calibration/evaluation splits.
 type: dataset
+version: "1.3"
 authors:
   - family-names: Bharathwaj
     given-names: Riya
@@ -23,11 +24,12 @@ keywords:
 identifiers:
   - type: other
     value: "generator-seed-20260724001"
-    description: Dataset generator seed for the frozen v1.1 pool.
+    description: Dataset generator seed for the frozen pool (dataset.json unchanged since v1.1).
 preferred-citation:
   type: generic
   title: "ErosionBench: Measuring Alignment Decay in Multi-Agent LLM Systems"
   year: 2026
   notes: >-
     Generator seed 20260724001; family-disjoint calibration/evaluation splits.
-    Dataset v1.1 (supply_chain_poisoning payload correction).
+    Dataset v1.3 (adds the eval_clean_control.json headline arm; v1.2 added the
+    Mode B image subset; v1.1 corrected supply_chain_poisoning payloads).

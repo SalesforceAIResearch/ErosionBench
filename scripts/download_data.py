@@ -64,8 +64,9 @@ def download(repo_id: str, revision: str | None, dest: Path) -> None:
         revision=revision,
         local_dir=str(dest),
         # The Hub README is the dataset card (tracked here as DATASET_CARD.md); skipping it keeps
-        # the tracked data/README.md intact. It is not in either PROVENANCE manifest.
-        ignore_patterns=["README.md", ".gitattributes"],
+        # the tracked data/README.md intact. It is not in either PROVENANCE manifest. parquet/ is
+        # the derived load_dataset view of the split JSONs; the harness reads the JSON, so skip it.
+        ignore_patterns=["README.md", ".gitattributes", "parquet/*"],
     )
     print("Download complete.")
 
