@@ -248,11 +248,14 @@ python3 scripts/run_final_eval.py                        # needs API keys for th
 ```
 
 Keep `EVAL_MESH_MODEL=gpt-5.5` — the calibration (and hence the operating point) is joint over the
-auditor **and** the mesh, so swapping the mesh invalidates the frozen threshold. Each artifact was fit
-on the full held-out calibration split, so the **same command reproduces that auditor's headline** once
-you point `EVAL_DATASET` at the full `data/eval.json` (fetched data — see *Install*); on the
-32-scenario sample it is a functional check that the calibrated path runs and the leak guard passes,
-not a metric (n is far too small to estimate the operating point).
+auditor **and** the mesh, so swapping the mesh invalidates the frozen threshold. The opus-4-8,
+sonnet-4-6 and gemini-3.5-flash artifacts were fit on the full calibration split (1,124 scenarios) and
+gpt-5.1 on 1,123; the **gpt-5.5 artifact was fit on a 765-scenario subset** and its Platt fit is
+degenerate, so treat its numbers as indicative. To reproduce an auditor's headline, point
+`EVAL_DATASET` at the held-out clean-control arm `data/eval_clean_control.json` (fetched data — see
+*Install*), as in *Reproduce the headline number*; on the 32-scenario sample it is a functional check
+that the calibrated path runs and the leak guard passes, not a metric (n is far too small to estimate
+the operating point).
 
 ### Option 2 — fit a brand-new auditor
 
@@ -313,7 +316,7 @@ ErosionBench/
 │   └── sandbox/            # offline FastAPI tool server + domain handlers
 │
 ├── scripts/                # user-facing entry points
-│   ├── run_final_eval.py   # headline repro: score eval.json once w/ the frozen artifact
+│   ├── run_final_eval.py   # score EVAL_DATASET once w/ the frozen artifact (headline: eval_clean_control.json)
 │   ├── run_full_eval.py    # full L1–L5 ladder over a dataset (live auditor pass)
 │   ├── generate_dataset.py # regenerate the scenario pool
 │   ├── collect_calibration.py # fit the split-conformal detector per auditor
@@ -344,8 +347,9 @@ recovered-payload capturability table.
 python3 scripts/verify_phase1_gate.py data/dataset.json        # 0 refusals, 0 wrapper-meta leakage
 ```
 
-Pinned `dataset.json` SHA-256 (v1.1): `faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`.
-See the [changelog](DATASET_CARD.md#changelog) for the v1.0 → v1.1 correction.
+Current dataset release: **v1.3**. Pinned `dataset.json` SHA-256 (unchanged since v1.1):
+`faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`.
+See the [changelog](DATASET_CARD.md#changelog) for what each version added.
 
 ---
 

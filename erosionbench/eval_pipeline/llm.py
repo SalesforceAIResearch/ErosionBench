@@ -6,9 +6,9 @@
 A thin, gateway-aware wrapper over the OpenAI SDK so the agent backends
 (:mod:`backends`) and the LLM-backed firewalls (:mod:`firewalls`) authenticate
 identically. It mirrors the conventions already used elsewhere in ErosionBench
-(``erosionbench.mesh.config`` / ``unit_baseline``):
+(``erosionbench.mesh.config``):
 
-* honors an optional ``X-Api-Key`` gateway header (Salesforce Research gateway),
+* honors an optional ``X-Api-Key`` header for OpenAI-compatible LLM gateways,
 * clamps temperature for reasoning-class models (gpt-5.x / o1 / o3 / o4) that reject
   any explicit temperature other than the default,
 * degrades gracefully: if the SDK or credentials are missing, :pyattr:`available`
@@ -202,35 +202,35 @@ def _secondary_base_url() -> str:
     return base + "/v1/"
 
 
-# The secondary gateway is an internal Salesforce host whose TLS chain is signed by a
-# private CA not present in certifi's public bundle. We build a combined bundle
-# (certifi + Salesforce CA) once and hand the secondary client an httpx client that
-# verifies against it -- without disturbing the public certs the primary gateway needs.
-#: Candidate locations for the Salesforce private CA bundle (first existing wins).
-_SF_CA_CANDIDATES = [
-    os.path.expanduser("~/.claude/certs/salesforce-ca-bundle.pem"),
-    os.getenv("EROSIONBENCH_EXTRA_CA_BUNDLE", ""),
+# A self-hosted secondary gateway may present a TLS chain signed by a private CA that is
+# not in certifi's public bundle. If ``EROSIONBENCH_EXTRA_CA_BUNDLE`` points at that CA, we
+# build a combined bundle (certifi + extra CA) once and hand the secondary client an httpx
+# client that verifies against it -- without disturbing the public certs the primary
+# gateway needs.
+#: Candidate locations for the extra CA bundle (first existing wins).
+_EXTRA_CA_CANDIDATES = [
+    os.path.expanduser(os.getenv("EROSIONBENCH_EXTRA_CA_BUNDLE", "")),
 ]
 
 
 def _combined_ca_bundle() -> Optional[str]:
-    """Path to a certifi+Salesforce combined CA bundle, or None if unavailable.
+    """Path to a certifi+extra-CA combined bundle, or None if unavailable.
 
     Cached on disk next to the package's working dir so it is built at most once.
     Returns None (caller falls back to default verification) on any failure.
     """
-    sf_ca = next((p for p in _SF_CA_CANDIDATES if p and os.path.exists(p)), None)
-    if not sf_ca:
+    extra_ca = next((p for p in _EXTRA_CA_CANDIDATES if p and os.path.exists(p)), None)
+    if not extra_ca:
         return None
     try:
         import certifi
 
         out = os.path.join(os.getcwd(), ".certs_combined.pem")
         # Rebuild if missing or stale relative to either source.
-        sources_mtime = max(os.path.getmtime(certifi.where()), os.path.getmtime(sf_ca))
+        sources_mtime = max(os.path.getmtime(certifi.where()), os.path.getmtime(extra_ca))
         if not os.path.exists(out) or os.path.getmtime(out) < sources_mtime:
             with open(out, "wb") as fh:
-                for src in (certifi.where(), sf_ca):
+                for src in (certifi.where(), extra_ca):
                     with open(src, "rb") as s:
                         fh.write(s.read())
                         fh.write(b"\n")
@@ -240,16 +240,18 @@ def _combined_ca_bundle() -> Optional[str]:
 
 
 def _secondary_http_client():
-    """An httpx client that trusts the combined CA bundle, or None to use defaults.
+    """An httpx client for the secondary gateway, or None to use the SDK defaults.
 
     The secondary gateway is connection-sensitive under load; bound the pool so concurrent
     mesh+auditor calls queue rather than racing into connection resets, and keep generous
-    timeouts so a queued request waits instead of failing the (fail-closed) run.
+    timeouts so a queued request waits instead of failing the (fail-closed) run. TLS verifies
+    against the combined CA bundle when an extra CA is configured, else the system trust store
+    (same as the SDK default -- plain certifi would reject hosts the OS already trusts).
     """
     bundle = _combined_ca_bundle()
-    if not bundle:
-        return None
     try:
+        import ssl
+
         import httpx
 
         limits = httpx.Limits(
@@ -261,7 +263,8 @@ def _secondary_http_client():
         # queued request should wait, not fail the (fail-closed) run. Defaults high, env-overridable
         # to match the primary gateway's EROSIONBENCH_LLM_REQUEST_TIMEOUT knob.
         sec_timeout = float(os.getenv("EROSIONBENCH_SECONDARY_REQUEST_TIMEOUT", "300") or 300)
-        return httpx.Client(verify=bundle, timeout=httpx.Timeout(sec_timeout), limits=limits)
+        verify = bundle or ssl.create_default_context()
+        return httpx.Client(verify=verify, timeout=httpx.Timeout(sec_timeout), limits=limits)
     except Exception:
         return None
 
@@ -298,7 +301,7 @@ def make_raw_openai_client(model: Optional[str] = None):
     try:
         if _uses_secondary_gateway(model):
             # Secondary gateway: Bearer-auth, OpenAI-compatible chat schema. Verify against
-            # the combined CA bundle (certifi + Salesforce private CA) so the internal host's
+            # the combined CA bundle (certifi + optional extra CA) so a privately-signed host's
             # TLS chain validates without overriding the public certs the primary gateway needs.
             sec_kwargs: Dict[str, Any] = {
                 "api_key": _LLM_GATEWAY_API_KEY,

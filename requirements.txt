@@ -1,54 +1,37 @@
-# Multi-Agent Alignment Decay Benchmark Dependencies
+# ErosionBench dependencies.
+#
+# pyproject.toml is the source of truth; prefer `pip install -e .` (plus extras, e.g.
+# `pip install -e ".[guards,dev]"`). This file mirrors [project].dependencies for tools
+# that only understand requirements files -- keep the two in sync.
 
-# Core LLM and Agent Framework
+# Core (= [project].dependencies)
 anthropic>=0.40.0
 langgraph>=0.2.0
 langchain-core>=0.3.0
-# Preferred "LangChain model" backend for ErosionBench (optional: the harness
-# falls back to the anthropic SDK, then to a deterministic offline judge).
 langchain-anthropic>=0.3.0
-
-# Guardrail boundary + models for the Unit Baseline (erosionbench/unit_baseline.py).
-# The baseline calls real models (OpenAI agent + S14/AlignmentCheck judges, and
-# LlamaFirewall PromptGuard) and degrades to a deterministic S14 regex + scripted
-# agent if a key/dep is missing.
-llamafirewall>=1.0.0
 openai>=1.40.0
-# PromptGuard (input scanner) needs the pre-1.0 huggingface stack; llamafirewall
-# 1.0.x imports huggingface_hub.HfFolder, removed in hub>=1.0. Only required if
-# you want the PromptGuard input filter (the OpenAI judges work without it):
-#   pip install "transformers>=4.40,<5" "huggingface_hub>=0.30.2,<1.0" "tokenizers>=0.19,<0.21"
-
-# Multi-Agent Mesh Baseline (erosionbench/mesh_baseline.py): LangGraph 4-node mesh
-# with a LlamaFirewall perimeter (PromptGuard input + Llama-Guard-3-8B output +
-# AlignmentCheck) and a deterministic, code-level solver.
-#   - langgraph (graph runtime), already pinned above
-#   - transformers: real Llama-Guard-3-8B / PromptGuard 2 (optional; --hf-guard /
-#     --prompt-guard). Heavy + gated; the harness falls back to OpenAI-served
-#     Llama/judge models when HF can't be used.
-#   - pandas: pretty summary dataframe (optional; falls back to a plain table).
-transformers>=4.40
-pandas>=2.0.0
-
-# Data Validation and Models
 pydantic>=2.0.0
 pydantic-settings>=2.0.0
-
-# Environment and Config
 python-dotenv>=1.0.0
-
-# CLI and Visualization
 rich>=13.0.0
 typer>=0.12.0
-
-# Testing
-pytest>=8.0.0
-pytest-asyncio>=0.23.0
-
-# PDF corpus: fpdf2 renders benign enterprise docs (+ injected needle) to PDF; pypdf is the
-# agent-side reader that extracts text back out (true-sim document read path).
 fpdf2>=2.7.0
 pypdf>=4.0.0
+fastapi>=0.110.0
+uvicorn>=0.29.0
+httpx>=0.27.0
+huggingface_hub>=0.23.0
+pyyaml>=5.3
 
-# Utilities
-jq>=1.0.0
+# Optional extras -- uncomment what you need (= [project.optional-dependencies]).
+# guards: local HF guard models, LlamaFirewall perimeter, analysis extras
+# llamafirewall>=1.0.0
+# transformers>=4.40
+# pandas>=2.0.0
+# images: Mode B image rendering/OCR (pytesseract also needs the system `tesseract` binary)
+# Pillow>=10.0.0
+# pytesseract>=0.3.10
+# datasets>=2.14.0
+# dev
+# pytest>=8.0.0
+# pytest-asyncio>=0.23.0

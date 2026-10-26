@@ -16,13 +16,13 @@ configs:
   - config_name: default
     data_files:
       - split: calibration
-        path: calib.json
+        path: parquet/calib.parquet
       - split: evaluation
-        path: eval.json
+        path: parquet/eval.parquet
   - config_name: clean_control
     data_files:
       - split: evaluation
-        path: eval_clean_control.json
+        path: parquet/eval_clean_control.parquet
 ---
 
 # ErosionBench — Multi-Agent Alignment Decay Benchmark
@@ -89,6 +89,7 @@ shared PDF corpus below.
 ├── calib.json                      calibration split — 1,124 (843 + 281)
 ├── eval.json                       held-out split — 604 (453 + 151)
 ├── eval_clean_control.json         held-out clean-control arm (paper headline) — 906 (453 + 453)
+├── parquet/                        load_dataset / Viewer copies of the 3 splits (see Data Fields)
 ├── PROVENANCE_hashes.txt           SHA-256 of 42 files (everything except Mode B)
 ├── verification_manifest.json      per-scenario needle placement + PDF round-trip proof
 ├── shared_corpus/                  clean base PDFs (no payloads), shared within a domain
@@ -231,6 +232,9 @@ print("intent:   ", ex["user_intent"])
 print("objective:", ex["attacker_objective"][:140], "…")
 c = ex["ground_truth_contracts"][0]
 print("contract: ", c["name"], c["severity"])
+
+import json  # three fields are JSON strings in this view (see Data Fields)
+history = json.loads(ex["session_history"])
 ```
 
 ### Featured Family — The Alignment-Decay Ramp (Autonomous CRM, `crisis_escalation_hijack`)
@@ -367,6 +371,14 @@ copy of this pair also ships in the code repo under `data/sample/mode_b/`.)*
 Each file is a **JSON array** of scenario objects (~40 KB each, documents embedded); five fields are
 nested, so the data is not flattened to CSV. Load a config with
 `load_dataset("Salesforce/ErosionBench", "clean_control")` (default config: `calibration` / `evaluation`).
+
+`load_dataset` and the Viewer read the **parquet copies** in `parquet/`, built from the JSON by
+`scripts/build_hf_parquet.py` in the code repo. Three fields are not Arrow-typeable in the JSON, so the
+parquet copies store them as **JSON strings** — recover them with `json.loads`:
+`session_history`, `execution_spec.base_args`, and `ground_truth_contracts[].params.threshold`
+(which mixes numbers, booleans and the `"__never_matches__"` sentinel). Keys absent from a record
+appear as `null` in this view. Everything else is identical. The JSON files remain canonical: the
+harness reads them, and `PROVENANCE_hashes.txt` pins them (the parquet copies are derived and not hashed).
 
 | Field | Description |
 |---|---|
@@ -552,7 +564,7 @@ needle is spliced into, with proof it survives the text→PDF→text round-trip.
 
 - **Generator model:** gpt-5   |   **Seed:** 20260724001
 - **Split:** seed 1337, calibration-fraction 0.65, family-disjoint
-- **Pinned `dataset.json` SHA-256 (v1.1):** `faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`
+- **Pinned `dataset.json` SHA-256 (unchanged since v1.1):** `faf765c73a071d70305b11e49caaca9317fc88398e89a7891039e9218bc0e3bf`
 
 ## Intended Use & Limitations
 
@@ -589,7 +601,9 @@ OpenAI gpt-5; use of the data should also respect the
   B images stay byte-identical. Mode B over-refusal (FPR) becomes reportable at that point.
 - **v1.3** — added `eval_clean_control.json`, the paper's headline evaluation arm: the 453 held-out
   malicious scenarios (byte-identical to `eval.json`) + 453 validity-matched benign controls. Registered
-  in `PROVENANCE_hashes.txt` (now 42 files); every previously shipped data file is unchanged.
+  in `PROVENANCE_hashes.txt` (now 42 files); every previously shipped data file is unchanged. Also
+  added `parquet/` copies of the three splits so `load_dataset` and the Dataset Viewer work (derived
+  view, no data change; see *Data Fields*).
 
 <details>
 <summary>Earlier versions (v1.0 – v1.2)</summary>

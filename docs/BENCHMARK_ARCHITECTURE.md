@@ -96,7 +96,7 @@ and always let the gate block+retry.**
 ### 2.3 Domains, attack classes, tiers
 
 **4 domains × 4 attack classes each = 16 attack families**, each expanded across **3 tiers**,
-each with a **benign twin**. (`erosionbench/eval_pipeline/datagen/domain_specs.py`.)
+each with a **benign twin**. (`erosionbench/eval_pipeline/datagen/domain_specs/`, one module per domain.)
 
 | Domain | Attack classes |
 |---|---|
@@ -530,7 +530,7 @@ curl -s "$EROSIONBENCH_SANDBOX_URL/v1/docs/fetch/<doc_id>?page_start=3&page_end=
 
 | Concern | File |
 |---|---|
-| Domain specs (tools, assertions, attack classes) | `erosionbench/eval_pipeline/datagen/domain_specs.py` |
+| Domain specs (tools, assertions, attack classes) | `erosionbench/eval_pipeline/datagen/domain_specs/` (one module per domain) |
 | Structural attack graph + generation loop | `erosionbench/eval_pipeline/datagen/build_dataset.py` |
 | Benign narrative LLM generation | `erosionbench/eval_pipeline/datagen/generator.py` |
 | Canonical needle renderer | `erosionbench/eval_pipeline/datagen/needle_renderer.py` |
