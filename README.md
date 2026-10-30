@@ -306,7 +306,7 @@ ErosionBench/
 ├── RELEASE_README.md       # sandbox / release packaging
 ├── pyproject.toml          # pip install -e .
 ├── Dockerfile.sandbox
-├── LICENSE.txt             # Apache-2.0 (code); dataset/corpus are CC-BY-4.0 (DATA_LICENSE)
+├── LICENSE.txt             # Apache-2.0 (code); dataset/corpus are CC-BY-NC-4.0 (DATA_LICENSE)
 ├── DATA_LICENSE
 ├── CITATION.cff
 ├── AI_ETHICS.md · SECURITY.md · CONTRIBUTING.md · CODE_OF_CONDUCT.md
@@ -376,8 +376,8 @@ pytest tests/            # unit + integration; the sandbox tests spin up an in-p
 ## License & citation
 
 Dual-licensed: the **code** (the `erosionbench` package, sandbox, and scripts) is under
-**Apache-2.0** ([`LICENSE.txt`](LICENSE.txt)); the **dataset and corpus** are under **CC-BY-4.0**
-([`DATA_LICENSE`](DATA_LICENSE)).
+**Apache-2.0** ([`LICENSE.txt`](LICENSE.txt)); the **dataset and corpus** are under **CC-BY-NC-4.0**
+([`DATA_LICENSE`](DATA_LICENSE), non-commercial use only). **This dataset cannot be used to compete with OpenAI.**
 
 ```bibtex
 @misc{erosionbench2026,
