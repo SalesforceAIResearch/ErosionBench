@@ -1,5 +1,5 @@
 ---
-license: cc-by-4.0
+license: cc-by-nc-4.0
 task_categories:
   - text-classification
 tags:
@@ -26,6 +26,8 @@ configs:
 ---
 
 # ErosionBench — Multi-Agent Alignment Decay Benchmark
+
+> **License: CC-BY-NC-4.0 (non-commercial).** This dataset cannot be used to compete with OpenAI. See [License](#license).
 
 ErosionBench measures **alignment decay**: how attack success against an LLM agent system escalates
 as the system moves from a single agent to a cooperating multi-agent mesh, and how much of that
@@ -589,7 +591,8 @@ and [AI AUP](https://www.salesforce.com/content/dam/web/en_us/www/documents/lega
 
 ## License
 
-The dataset and corpus (all files in this repository) are released under **CC-BY-4.0**. The
+The dataset and corpus (all files in this repository) are released under **CC-BY-NC-4.0**
+(non-commercial use only). **This dataset cannot be used to compete with OpenAI.** The
 evaluation code is released separately under **Apache-2.0** in the
 [code repo](https://github.com/SalesforceAIResearch/ErosionBench). Scenario text was generated with
 OpenAI gpt-5; use of the data should also respect the
