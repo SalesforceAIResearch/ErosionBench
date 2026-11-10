@@ -25,10 +25,34 @@ identifiers:
   - type: other
     value: "generator-seed-20260724001"
     description: Dataset generator seed for the frozen pool (dataset.json unchanged since v1.1).
+  - type: url
+    value: "https://arxiv.org/abs/2611.11266"
+    description: arXiv preprint describing the benchmark.
 preferred-citation:
-  type: generic
-  title: "ErosionBench: Measuring Alignment Decay in Multi-Agent LLM Systems"
+  type: article
+  title: "ErosionBench: Probing Alignment Decay in Enterprise Multi-Agent Systems"
+  authors:
+    - family-names: Bharathwaj
+      given-names: Riya
+    - family-names: Prabhakar
+      given-names: Akshara
+    - family-names: Ram
+      given-names: Roshan
+    - family-names: Kothari
+      given-names: Avni
+    - family-names: Tan
+      given-names: Sarah
+    - family-names: Wang
+      given-names: Huan
+    - family-names: Savarese
+      given-names: Silvio
   year: 2026
+  journal: "arXiv preprint arXiv:2611.11266"
+  url: "https://arxiv.org/abs/2611.11266"
+  identifiers:
+    - type: other
+      value: "arXiv:2611.11266"
+      description: arXiv identifier
   notes: >-
     Generator seed 20260724001; family-disjoint calibration/evaluation splits.
     Dataset v1.3 (adds the eval_clean_control.json headline arm; v1.2 added the

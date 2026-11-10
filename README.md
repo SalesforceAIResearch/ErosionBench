@@ -11,8 +11,8 @@ success) and whether a defense flags it — while tracking over-refusal on benig
 > adversarial by design. This release is for research purposes only — see
 > [`AI_ETHICS.md`](AI_ETHICS.md).
 
-📄 **Paper:** *ErosionBench: Probing Alignment Decay in Enterprise Multi-Agent Systems* (arXiv link
-coming soon) · 🤗 **Dataset:** [`Salesforce/ErosionBench`](https://huggingface.co/datasets/Salesforce/ErosionBench)
+📄 **Paper:** *ErosionBench: Probing Alignment Decay in Enterprise Multi-Agent Systems*
+([arXiv:2611.11266](https://arxiv.org/abs/2611.11266)) · 🤗 **Dataset:** [`Salesforce/ErosionBench`](https://huggingface.co/datasets/Salesforce/ErosionBench)
 
 - **Domains:** 4 — Autonomous CRM, CI/CD Supply Chain, Data Engineering, Quantitative Finance
 - **Attack classes:** 16 (4 per domain), mapped to the OWASP LLM Top-10 (2025)
@@ -384,9 +384,10 @@ Dual-licensed: the **code** (the `erosionbench` package, sandbox, and scripts) i
   title         = {ErosionBench: Probing Alignment Decay in Enterprise Multi-Agent Systems},
   author        = {Bharathwaj, Riya and Prabhakar, Akshara and Ram, Roshan and Kothari, Avni and Tan, Sarah and Wang, Huan and Savarese, Silvio},
   year          = {2026},
-  eprint        = {XXXX.XXXXX},    % TODO: fill arXiv id once v1 is posted
+  eprint        = {2611.11266},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CR},
+  url           = {https://arxiv.org/abs/2611.11266},
   note          = {Generator seed 20260724001; family-disjoint calibration/evaluation splits.}
 }
 ```
