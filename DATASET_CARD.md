@@ -29,6 +29,8 @@ configs:
 
 > **License: CC-BY-NC-4.0 (non-commercial).** This dataset cannot be used to compete with OpenAI. See [License](#license).
 
+📄 **Paper:** [*ErosionBench: Probing Alignment Decay in Enterprise Multi-Agent Systems*](https://arxiv.org/abs/2611.11266) (arXiv:2611.11266)
+
 ErosionBench measures **alignment decay**: how attack success against an LLM agent system escalates
 as the system moves from a single agent to a cooperating multi-agent mesh, and how much of that
 decay each defense layer recovers. Each scenario is a realistic enterprise task whose documents
@@ -636,9 +638,10 @@ OpenAI gpt-5; use of the data should also respect the
   title         = {ErosionBench: Probing Alignment Decay in Enterprise Multi-Agent Systems},
   author        = {Bharathwaj, Riya and Prabhakar, Akshara and Ram, Roshan and Kothari, Avni and Tan, Sarah and Wang, Huan and Savarese, Silvio},
   year          = {2026},
-  eprint        = {XXXX.XXXXX},    % TODO: fill arXiv id once v1 is posted
+  eprint        = {2611.11266},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CR},
+  url           = {https://arxiv.org/abs/2611.11266},
   note          = {Generator seed 20260724001; family-disjoint calibration/evaluation splits.}
 }
 ```
